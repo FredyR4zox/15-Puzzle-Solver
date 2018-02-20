@@ -7,6 +7,7 @@ João Lucas Pires, 201606617*/
 //Classe da configuração do tabuleiro
 class Config {
 private:
+	vec
 
 public:
 	int pos[4][4]; 

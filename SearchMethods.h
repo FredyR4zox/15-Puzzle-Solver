@@ -4,8 +4,7 @@
 #include <queue>
 using namespace std;
 
-/*Bibliotecas de Pesquisa para Jogo dos 15
-João Lucas Pires, 201606617*/
+/*Bibliotecas de Pesquisa para Jogo dos 15*/
 
 void DFS() /*Depth first search function*/
 	{}
