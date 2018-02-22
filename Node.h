@@ -18,7 +18,7 @@ class Node{
 private:
     Config cfg;
     Node *parent;
-    char move;
+    char move;  //Start: 'a'; Up: 'u'; Down: 'd'; Left: 'l'; Right: 'r'
     unsigned int depth;
     unsigned int path_cost;
 
@@ -27,14 +27,16 @@ public:
     Node(const vector<int> &vec);
     Node(const Config &cfg_);
     Node(Node *node, const char &move);
+
     Config getConfig() const;
     char getMove() const;
     Node* getParent() const;
     unsigned int getDepth() const;
     unsigned int getPathCost() const;
+
+    void display();
     vector<Node> makeDescendants();
     string makePath();
-    void display();
 };
 
 //Métodos para a classe de Nós
@@ -74,16 +76,11 @@ Node::Node(Node *node, const char &mv){
     cout << "Build: " << this << "   parent: " << parent << endl;
 }
 
-//"Getter" para obter a matriz da configuração (que é privada) e não pode ser acedida a partir desta classe.
-void Node::display(){
-    cfg.display();
-}
-
 Config Node::getConfig() const{
     return cfg;
 }
 
-Move Node::getMove() const{
+char Node::getMove() const{
     return move;
 }
 
@@ -99,12 +96,17 @@ unsigned int Node::getPathCost() const{
     return path_cost;
 }
 
+//"Getter" para obter a matriz da configuração (que é privada) e não pode ser acedida a partir desta classe.
+void Node::display(){
+    cfg.display();
+}
+
 vector<Node> Node::makeDescendants(){
     vector<char> moves = cfg.possibleMoves();
     vector<Node> l;
 
     for(unsigned int i=0; i<moves.size(); i++){
-        Node node = Node(this, moves[i]);
+        Node node = Node(this, moves.at(i));
         l.push_back(node);
     }
 
@@ -123,5 +125,3 @@ string Node::makePath(){
 
     return path;
 }
-
-//tirar a biblioteca Move.h?
