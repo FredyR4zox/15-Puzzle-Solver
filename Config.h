@@ -12,7 +12,7 @@ class Config{
 
 private:
     vector< vector<int> > matrix;
-    unsigned int empty_x;
+    unsigned int empty_x;   //posição do sitio onde está o espaço vazio
     unsigned int empty_y;
 
 public:
@@ -24,7 +24,7 @@ public:
     void move(const char &move);
 };
 
-//Construtores da classe config (para args: void e int[])   
+//Construtores da classe config (para args: void e vector<int>)   
 Config::Config(){
     for (unsigned int i = 0 ; i < 4 ; i++){
         vector<int> vec;

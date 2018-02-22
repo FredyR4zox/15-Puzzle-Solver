@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <list>
 #include <string>
 
 #include "Config.h"
@@ -72,8 +71,6 @@ Node::Node(Node *node, const char &mv){
     move = mv;
     depth = node->getDepth() + 1;
     path_cost = node->getPathCost() + 1;
-
-    cout << "Build: " << this << "   parent: " << parent << endl;
 }
 
 Config Node::getConfig() const{
