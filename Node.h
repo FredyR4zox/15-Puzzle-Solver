@@ -18,7 +18,7 @@ class Node{
 private:
     Config cfg;
     Node *parent;
-    Move last;
+    char move;
     unsigned int depth;
     unsigned int path_cost;
 
@@ -26,9 +26,9 @@ public:
     Node();
     Node(const vector<int> &vec);
     Node(const Config &cfg_);
-    Node(Node *node, const Move &move);
+    Node(Node *node, const char &move);
     Config getConfig() const;
-    Move getMove() const;
+    char getMove() const;
     Node* getParent() const;
     unsigned int getDepth() const;
     unsigned int getPathCost() const;
@@ -42,7 +42,7 @@ public:
 Node::Node(){
     cfg = Config();
     parent = NULL;
-    last = Move();
+    move = 'a';
     depth = 0;
     path_cost = 0;
 }
@@ -50,7 +50,7 @@ Node::Node(){
 Node::Node(const vector<int> &vec){
     cfg = Config(vec);
     parent = NULL;
-    last = Move();
+    move = 'a';
     depth = 0;
     path_cost = 0;
 }
@@ -58,16 +58,16 @@ Node::Node(const vector<int> &vec){
 Node::Node(const Config &cfg_){
     cfg = cfg_;
     parent = NULL;
-    last = Move();
+    move = 'a';
     depth = 0;
     path_cost = 0;
 }
 
-Node::Node(Node *node, const Move &mv){
+Node::Node(Node *node, const char &mv){
     cfg = node->getConfig();
     cfg.move(mv);
     parent = node; // (Node *) porque sem isso ele reclama que node é const
-    last = mv;
+    move = mv;
     depth = node->getDepth() + 1;
     path_cost = node->getPathCost() + 1;
 
@@ -84,7 +84,7 @@ Config Node::getConfig() const{
 }
 
 Move Node::getMove() const{
-    return last;
+    return move;
 }
 
 Node* Node::getParent() const{
@@ -102,9 +102,9 @@ unsigned int Node::getPathCost() const{
 vector<Node> Node::makeDescendants(){
     vector<char> moves = cfg.possibleMoves();
     vector<Node> l;
-    
+
     for(unsigned int i=0; i<moves.size(); i++){
-        Node node = Node(this, Move(moves[i]));
+        Node node = Node(this, moves[i]);
         l.push_back(node);
     }
 
@@ -116,7 +116,7 @@ string Node::makePath(){
     Node *node = this;
 
     while(node != NULL){
-        char c = node->getMove().getMove();
+        char c = node->getMove();
         path+=c;
         node = node->getParent();
     }

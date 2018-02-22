@@ -2,8 +2,6 @@
 #include <iomanip>
 #include <vector>
 
-#include "Move.h"
-
 using namespace std;
 
 #define EMPTY_SPACE_NUMBER 0
@@ -24,7 +22,7 @@ public:
     Config(const vector<int> vec);
 
     vector<char> possibleMoves();
-    void move(const Move &move);
+    void move(const char &move);
     void display();
 };
 
@@ -69,8 +67,8 @@ void Config::display(){
     cout << "+-----------------+" << endl;  
 }
 
-void Config::move(const Move &move){
-    switch(move.getMove()){
+void Config::move(const char &move){
+    switch(move){
         case 'u':
             matrix.at(empty_x).at(empty_y) = matrix.at(empty_x-1).at(empty_y);
             matrix.at(empty_x-1).at(empty_y) = 0;
