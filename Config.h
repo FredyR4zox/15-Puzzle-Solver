@@ -27,6 +27,7 @@ public:
 
     unsigned int getEmptyRowIndex() const;
     unsigned int getEmptyColumnIndex() const;
+    vector< vector<int> > getMatrix() const;
 
     void display();
     vector<char> possibleMoves();
@@ -68,6 +69,10 @@ unsigned int Config::getEmptyRowIndex() const{
 
 unsigned int Config::getEmptyColumnIndex() const{
     return emptyColumnIndex;
+}
+//Added this one to get access to the matrix in the heuristics
+vector< vector<int> > Config::getMatrix() const{
+    return matrix;
 }
 
 //Print the board on stdout
@@ -145,3 +150,4 @@ bool operator==(const Config& left, const Config& right){
 bool operator!=(const Config& left, const Config& right){
     return !(left == right);
 }
+
