@@ -16,8 +16,10 @@ int main(){
     for(int i=1; i<16; i++)
         vec2.push_back(i);
     vec2.push_back(0);
-    vec2[15] = 12;
-    vec2[11] = 0;
+    vec2[12] = 0;
+    vec2[13] = 13;
+    vec2[14] = 14;
+    vec2[15] = 15;
 
 
     Node node = Node(vec);
@@ -29,7 +31,7 @@ int main(){
     Config initialConfig = Config(vec2);
     Config finalConfig = Config(vec);
 
-    BFS(initialConfig, finalConfig);
+    cout << BFS(initialConfig, finalConfig) << endl;
 
     return 0;
 }

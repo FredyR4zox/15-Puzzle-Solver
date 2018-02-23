@@ -1,3 +1,5 @@
+/*Search Functions for the 15-Puzzle*/
+
 #include <iostream>
 #include <vector>
 #include <deque>
@@ -7,25 +9,29 @@
 
 using namespace std;
 
-/*Bibliotecas de Pesquisa para Jogo dos 15*/
-
+//Function to check if we can reach a solution from the initial configuration
 bool solutionExists(Config &initialConfig, Config &finalConfig){
+    //return (Inv%2 == 0) == ((initialConfig.getEmptyX+1)%2 == 1);
     return true;
 }
 
+//General Search Algorithm to search for a solution
 string GENERAL_SEARCH(Config &initialConfig, Config &finalConfig, int pos, unsigned int maxDepth){
     Node initialNode = Node(initialConfig);
     Node solution = Node(finalConfig);
 
     if(!solutionExists(initialConfig, finalConfig))
-        return "Solution not found";    //Não existe uma solução
+        return "Solution not found";    //There is no solution
 
-    deque<Node> q;
+    deque<Node> q;  //Double-Ended QUEue to be able to insert in the front or the back, depending on the pos (or function iterator)
     q.push_back(initialNode);
 
     while(!q.empty()){
         Node removed = q.front();
         q.pop_front();
+
+        cout << "Depth: " << removed.getDepth() << "   Move: " << removed.getMove() << endl;
+        removed.display();
         
         if(removed.getDepth() > maxDepth)
             break;

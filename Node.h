@@ -1,17 +1,18 @@
+/*Node Libraries for the 15-Puzzle
+It contains a configuration that is the board, a parent node,
+a char that is the movement that originated the board (Config and all the parents),
+a depth to retain how many moves we needed to do to reach the configuration
+and a pathCost to ....................*/
+
 #include <iostream>
 #include <vector>
 #include <string>
+#include <algorithm>
 
 #include "Config.h"
 
 using namespace std;
 
-/*Bibliotecas de Nós/Nodes (e movimento) para Jogo dos 15*/
-
-//Classe de Nós
-/*Os membros de dados são a configuração do tabuleiro, um apontador para o Nó pai,
-o movimento que originou este nó, a profundidade do nó, o custo do caminho 
-originado e uma fila de nós filhos.*/
 class Node{
 
 private:
@@ -19,7 +20,7 @@ private:
     Node *parent;
     char move;  //Start: 'a'; Up: 'u'; Down: 'd'; Left: 'l'; Right: 'r'
     unsigned int depth;
-    unsigned int path_cost;
+    unsigned int pathCost;
 
 public:
     Node();
@@ -38,14 +39,13 @@ public:
     string makePath();
 };
 
-//Métodos para a classe de Nós
-//Construtores de Nós para void e int[]
+//Constructor for the Node class (for args: void, vector<int> , Config and (Node,char))
 Node::Node(){
     cfg = Config();
     parent = NULL;
     move = 'a';
     depth = 0;
-    path_cost = 0;
+    pathCost = 0;
 }
 
 Node::Node(const vector<int> &vec){
@@ -53,7 +53,7 @@ Node::Node(const vector<int> &vec){
     parent = NULL;
     move = 'a';
     depth = 0;
-    path_cost = 0;
+    pathCost = 0;
 }
 
 Node::Node(const Config &cfg_){
@@ -61,7 +61,7 @@ Node::Node(const Config &cfg_){
     parent = NULL;
     move = 'a';
     depth = 0;
-    path_cost = 0;
+    pathCost = 0;
 }
 
 Node::Node(Node *node, const char &mv){
@@ -70,9 +70,10 @@ Node::Node(Node *node, const char &mv){
     parent = node; // (Node *) porque sem isso ele reclama que node é const
     move = mv;
     depth = node->getDepth() + 1;
-    path_cost = node->getPathCost() + 1;
+    pathCost = node->getPathCost() + 1;
 }
 
+//Getters
 Config Node::getConfig() const{
     return cfg;
 }
@@ -90,14 +91,18 @@ unsigned int Node::getDepth() const{
 }
 
 unsigned int Node::getPathCost() const{
-    return path_cost;
+    return pathCost;
 }
 
-//"Getter" para obter a matriz da configuração (que é privada) e não pode ser acedida a partir desta classe.
+//Print the board on stdout
 void Node::display(){
     cfg.display();
 }
 
+//Make the descendants of the current node
+//i.e.: move up, down, left and right
+//It will generate 4 Nodes at max (node not on limit of rows or columns)
+//And 2 min (Node in corner)
 vector<Node> Node::makeDescendants(){
     vector<char> moves = cfg.possibleMoves();
     vector<Node> l;
@@ -110,15 +115,21 @@ vector<Node> Node::makeDescendants(){
     return l;
 }
 
+//When the solution is found, print what moves were made
 string Node::makePath(){
     string path = "";
-    Node *node = this;
+    path += move;
+    Node *node = parent;
+    cout << this << endl;
+
+    cout << "make" << endl;
 
     while(node != NULL){
+        cout << node << endl;
         char c = node->getMove();
-        path+=c;
+        path+= string(" >- ") + c;
         node = node->getParent();
     }
 
-    return path;
+    return string(path.rbegin(), path.rend());  //reverse the string
 }
