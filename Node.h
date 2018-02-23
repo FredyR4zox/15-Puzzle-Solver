@@ -29,8 +29,8 @@ public:
     Node(Node *node, const char &move);
 
     Config getConfig() const;
-    char getMove() const;
     Node* getParent() const;
+    char getMove() const;
     unsigned int getDepth() const;
     unsigned int getPathCost() const;
 
@@ -78,12 +78,12 @@ Config Node::getConfig() const{
     return cfg;
 }
 
-char Node::getMove() const{
-    return move;
-}
-
 Node* Node::getParent() const{
     return parent;
+}
+
+char Node::getMove() const{
+    return move;
 }
 
 unsigned int Node::getDepth() const{
@@ -102,7 +102,7 @@ void Node::display(){
 //Make the descendants of the current node
 //i.e.: move up, down, left and right
 //It will generate 4 Nodes at max (node not on limit of rows or columns)
-//And 2 min (Node in corner)
+//And 2 at min (Node in corner)
 vector<Node> Node::makeDescendants(){
     vector<char> moves = cfg.possibleMoves();
     vector<Node> l;
@@ -121,8 +121,6 @@ string Node::makePath(){
     path += move;
     Node *node = parent;
     cout << this << endl;
-
-    cout << "make" << endl;
 
     while(node != NULL){
         cout << node << endl;
