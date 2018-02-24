@@ -25,6 +25,7 @@ public:
     Config();
     Config(const vector<int> vec);
 
+    vector< vector<int> > getMatrix() const;
     unsigned int getEmptyRowIndex() const;
     unsigned int getEmptyColumnIndex() const;
 
@@ -62,6 +63,10 @@ Config::Config(const vector<int> vec){
 }
 
 //Methods of the Config Class
+vector< vector<int> > Config::getMatrix() const{
+    return matrix;
+}
+
 unsigned int Config::getEmptyRowIndex() const{
     return emptyRowIndex;
 }

@@ -4,41 +4,68 @@
 #include <vector>
 #include <deque>
 #include <limits>
+#include <string>
+#include <cmath>
 
 #include "Node.h"
 
 using namespace std;
 
 //Function to check if we can reach a solution from the initial configuration
+unsigned int inversions(Config &initialConfig){
+    unsigned int n=0;
+
+    vector< vector<int> > matrix = initialConfig.getMatrix();
+
+    vector<int> vec;
+    for(unsigned int i=0; i < 4; i++){
+        for(unsigned int j=0; j < 4; j++)
+            vec.push_back(matrix.at(i).at(j));
+    }
+
+    for(unsigned int i=0; i < 16; i++){
+        n += vec.at(i);
+        for(unsigned int j=0; j <= i; j++){
+            if(vec.at(i) >= vec.at(j) && vec.at(i)!=0 && vec.at(j)!=0)
+                n--;
+        }
+    }
+
+    return n;
+}
+
 bool solutionExists(Config &initialConfig, Config &finalConfig){
-    //return (Inv%2 == 0) == ((initialConfig.getEmptyX+1)%2 == 1);
-    return true;
+    return (inversions(initialConfig)%2 == 0) == (abs((int)initialConfig.getEmptyRowIndex()-4)%2 == 1);
 }
 
 //General Search Algorithm to search for a solution
 string GENERAL_SEARCH(Config &initialConfig, Config &finalConfig, int pos, unsigned int maxDepth){
-    Node initialNode = Node(initialConfig);
-    Node solution = Node(finalConfig);
+    Node *initialNode = new Node(initialConfig);
+    Node *solution = new Node(finalConfig);
 
-    if(!solutionExists(initialConfig, finalConfig))
+    if(!solutionExists(initialConfig, finalConfig)){
+        delete initialNode;
+        delete solution;
         return "Solution not found";    //There is no solution
+    }
 
-    deque<Node> q;  //Double-Ended QUEue to be able to insert in the front or the back, depending on the pos (or function iterator)
+    deque<Node*> q;  //Double-Ended QUEue to be able to insert in the front or the back, depending on the pos (or function iterator)
     q.push_back(initialNode);
 
     while(!q.empty()){
-        Node removed = q.front();
+        Node *removed = q.front();
         q.pop_front();
-
-        cout << "Depth: " << removed.getDepth() << "   Move: " << removed.getMove() << endl;
-        removed.display();
         
-        if(removed.getDepth() > maxDepth)
+        if(removed->getDepth() > maxDepth)
             break;
-        else if(removed.getConfig() == solution.getConfig())
-            return removed.makePath();
+        else if(removed->getConfig() == solution->getConfig()){
+            string str = removed->makePath();
+            delete initialNode;
+            delete solution;
+            return str;
+        }
 
-        vector<Node> descendantList = removed.makeDescendants();
+        vector<Node*> descendantList = removed->makeDescendants();
 
 // Se pos for 0, entao a funcao de inserir na fila vai inserir os elementos no inicio da fila
 // Se pos for 1, entao a funcao de inserir na fila vai inserir os elementos no fim da fila
@@ -51,6 +78,9 @@ string GENERAL_SEARCH(Config &initialConfig, Config &finalConfig, int pos, unsig
         else
             q.insert(q.end(), descendantList.begin(), descendantList.end());
     }
+
+    delete initialNode;
+    delete solution;
 
     return "Solution not found";
 }

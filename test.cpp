@@ -11,16 +11,7 @@ int main(){
         vec.push_back(i);
     vec.push_back(0);
 
-    vector<int> vec2;
-
-    for(int i=1; i<16; i++)
-        vec2.push_back(i);
-    vec2.push_back(0);
-    vec2[12] = 0;
-    vec2[13] = 13;
-    vec2[14] = 14;
-    vec2[15] = 15;
-
+    vector<int> vec2 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0, 13, 14, 15};
 
     Node node = Node(vec);
     node.display();
