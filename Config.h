@@ -25,9 +25,9 @@ public:
     Config();
     Config(const vector<int> vec);
 
+    vector< vector<int> > getMatrix() const;
     unsigned int getEmptyRowIndex() const;
     unsigned int getEmptyColumnIndex() const;
-    vector< vector<int> > getMatrix() const;
 
     void display();
     vector<char> possibleMoves();
@@ -36,9 +36,9 @@ public:
 
 //Constructors for the Config class (for args: void and vector<int>) 
 Config::Config(){
-    for (unsigned int i = 0 ; i < 4 ; i++){
+    for(unsigned int i = 0 ; i < 4 ; i++){
         vector<int> vec;
-        for (unsigned int j = 0 ; j < 4 ; j++){
+        for(unsigned int j = 0 ; j < 4 ; j++){
             vec.push_back(i*4 + j + 1);
         }
         matrix.push_back(vec);
@@ -49,9 +49,9 @@ Config::Config(){
 }
 
 Config::Config(const vector<int> vec){
-    for (unsigned int i = 0 ; i < 4 ; i++){
+    for(unsigned int i = 0 ; i < 4 ; i++){
         vector<int> vec_aux;
-        for (unsigned int j = 0 ; j < 4 ; j++){
+        for(unsigned int j = 0 ; j < 4 ; j++){
             vec_aux.push_back(vec[i*4 + j]);
             if(vec.at(i*4 + j) == EMPTY_SPACE_NUMBER){
                 emptyRowIndex = i;
@@ -63,16 +63,16 @@ Config::Config(const vector<int> vec){
 }
 
 //Methods of the Config Class
+vector< vector<int> > Config::getMatrix() const{
+    return matrix;
+}
+
 unsigned int Config::getEmptyRowIndex() const{
     return emptyRowIndex;
 }
 
 unsigned int Config::getEmptyColumnIndex() const{
     return emptyColumnIndex;
-}
-//Added this one to get access to the matrix in the heuristics
-vector< vector<int> > Config::getMatrix() const{
-    return matrix;
 }
 
 //Print the board on stdout
@@ -150,4 +150,3 @@ bool operator==(const Config& left, const Config& right){
 bool operator!=(const Config& left, const Config& right){
     return !(left == right);
 }
-
