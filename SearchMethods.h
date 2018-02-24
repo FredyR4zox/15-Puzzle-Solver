@@ -6,6 +6,7 @@
 #include <limits>
 #include <string>
 #include <cmath>
+#include <chrono>
 
 #include "Heuristics.h"
 
@@ -65,7 +66,7 @@ string GENERAL_SEARCH(Config &initialConfig, Config &finalConfig, int pos, unsig
             return str;
         }
 
-        vector<Node*> descendantList = removed->makeDescendants();
+        vector<Node*> descendantList = removed->makeDescendants(*initialNode);
 
 // Se pos for 0, entao a funcao de inserir na fila vai inserir os elementos no inicio da fila
 // Se pos for 1, entao a funcao de inserir na fila vai inserir os elementos no fim da fila
@@ -86,11 +87,11 @@ string GENERAL_SEARCH(Config &initialConfig, Config &finalConfig, int pos, unsig
 }
 
 string DFS(Config &initialConfig, Config &finalConfig){ /*Depth first search function*/
-    return GENERAL_SEARCH(initialConfig, finalConfig, 0, numeric_limits<unsigned>::max());
+    return GENERAL_SEARCH(initialConfig, finalConfig, 0, 25);
 }
 
 string BFS(Config &initialConfig, Config &finalConfig){ /*Breadth first search function*/
-    return GENERAL_SEARCH(initialConfig, finalConfig, 1, numeric_limits<unsigned>::max());
+    return GENERAL_SEARCH(initialConfig, finalConfig, 1, 25);
 }
 
 string LDFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth){ /*Limited Breadth first search function*/
@@ -98,7 +99,7 @@ string LDFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth){ 
 }
 
 string IDFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth){  /*Iterative Depth first search function*/
-    for(unsigned int i=0; i<maxDepth; i++){
+    for(unsigned int i=0; i<=maxDepth; i++){
         string str = GENERAL_SEARCH(initialConfig, finalConfig, 0, i);
         if(str != "Solution not found")
             return str;

@@ -37,7 +37,7 @@ public:
     vector<Node*> getChildren() const;
 
     void display();
-    vector<Node*> makeDescendants();
+    vector<Node*> makeDescendants(const Node &root);
     string makePath();
 };
 
@@ -109,6 +109,7 @@ vector<Node*> Node::getChildren() const{
 
 //Print the board on stdout
 void Node::display(){
+    cout << "Depth: " << depth << "\tMove: " << move <<  endl;
     cfg.display();
 }
 
@@ -116,7 +117,7 @@ void Node::display(){
 //i.e.: move up, down, left and right
 //It will generate 4 Nodes at max (node not on limit of rows or columns)
 //And 2 at min (Node in corner)
-vector<Node*> Node::makeDescendants(){
+vector<Node*> Node::makeDescendants(const Node &root){
     vector<char> moves = cfg.possibleMoves();
     vector<Node*> l;
 
