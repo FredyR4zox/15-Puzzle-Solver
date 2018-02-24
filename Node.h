@@ -8,36 +8,33 @@ and a pathCost to ....................*/
 #include <vector>
 #include <string>
 #include <algorithm>
-
 #include "Config.h"
 
 using namespace std;
 
 class Node{
+
 private:
     Config cfg;
     Node *parent;
     char move;  //Start: 'a'; Up: 'u'; Down: 'd'; Left: 'l'; Right: 'r'
     unsigned int depth;
     unsigned int pathCost;
-    vector<Node*> children;
 
 public:
     Node();
     Node(const vector<int> &vec);
     Node(const Config &cfg_);
-    Node(Node &node, const char &move);
-    ~Node();
+    Node(Node *node, const char &move);
 
     Config getConfig() const;
     Node* getParent() const;
     char getMove() const;
     unsigned int getDepth() const;
     unsigned int getPathCost() const;
-    vector<Node*> getChildren() const;
 
     void display();
-    vector<Node*> makeDescendants(const Node &root);
+    vector<Node> makeDescendants();
     string makePath();
 };
 
@@ -66,20 +63,13 @@ Node::Node(const Config &cfg_){
     pathCost = 0;
 }
 
-Node::Node(Node &node, const char &mv){
-    cfg = node.getConfig();
+Node::Node(Node *node, const char &mv){
+    cfg = node->getConfig();
     cfg.move(mv);
-    parent = &node;
+    parent = node; // (Node *) porque sem isso ele reclama que node é const
     move = mv;
-    depth = node.getDepth() + 1;
-    pathCost = node.getPathCost() + 1;
-
-    node.children.push_back(this); //It seem that i can access node private parts, because they are within this context
-}
-
-Node::~Node(){
-    for(vector<Node*>::iterator itr = children.begin(); itr != children.end(); itr++)
-        delete *itr;
+    depth = node->getDepth() + 1;
+    pathCost = node->getPathCost() + 1;
 }
 
 //Getters
@@ -103,13 +93,8 @@ unsigned int Node::getPathCost() const{
     return pathCost;
 }
 
-vector<Node*> Node::getChildren() const{
-    return children;
-}
-
 //Print the board on stdout
 void Node::display(){
-    cout << "Depth: " << depth << "\tMove: " << move <<  endl;
     cfg.display();
 }
 
@@ -117,12 +102,12 @@ void Node::display(){
 //i.e.: move up, down, left and right
 //It will generate 4 Nodes at max (node not on limit of rows or columns)
 //And 2 at min (Node in corner)
-vector<Node*> Node::makeDescendants(const Node &root){
+vector<Node> Node::makeDescendants(){
     vector<char> moves = cfg.possibleMoves();
-    vector<Node*> l;
+    vector<Node> l;
 
     for(unsigned int i=0; i<moves.size(); i++){
-        Node *node = new Node(*this, moves.at(i));
+        Node node = Node(this, moves.at(i));
         l.push_back(node);
     }
 
@@ -134,8 +119,8 @@ string Node::makePath(){
     string path = "";
     path += move;
     Node *node = parent;
-
     while(node != NULL){
+        //cout << node << endl;
         char c = node->getMove();
         path+= string(" >- ") + c;
         node = node->getParent();
