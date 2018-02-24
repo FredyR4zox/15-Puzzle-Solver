@@ -7,7 +7,7 @@
 #include <string>
 #include <cmath>
 
-#include "Node.h"
+#include "Heuristics.h"
 
 using namespace std;
 

@@ -36,9 +36,9 @@ public:
 
 //Constructors for the Config class (for args: void and vector<int>) 
 Config::Config(){
-    for (unsigned int i = 0 ; i < 4 ; i++){
+    for(unsigned int i = 0 ; i < 4 ; i++){
         vector<int> vec;
-        for (unsigned int j = 0 ; j < 4 ; j++){
+        for(unsigned int j = 0 ; j < 4 ; j++){
             vec.push_back(i*4 + j + 1);
         }
         matrix.push_back(vec);
@@ -49,9 +49,9 @@ Config::Config(){
 }
 
 Config::Config(const vector<int> vec){
-    for (unsigned int i = 0 ; i < 4 ; i++){
+    for(unsigned int i = 0 ; i < 4 ; i++){
         vector<int> vec_aux;
-        for (unsigned int j = 0 ; j < 4 ; j++){
+        for(unsigned int j = 0 ; j < 4 ; j++){
             vec_aux.push_back(vec[i*4 + j]);
             if(vec.at(i*4 + j) == EMPTY_SPACE_NUMBER){
                 emptyRowIndex = i;

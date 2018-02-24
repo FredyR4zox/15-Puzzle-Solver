@@ -78,7 +78,7 @@ Node::Node(Node &node, const char &mv){
 }
 
 Node::~Node(){
-    for (vector<Node*>::iterator itr = children.begin(); itr != children.end(); itr++)
+    for(vector<Node*>::iterator itr = children.begin(); itr != children.end(); itr++)
         delete *itr;
 }
 
