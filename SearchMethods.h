@@ -57,7 +57,7 @@ string GENERAL_SEARCH(Config &initialConfig, Config &finalConfig, int pos, unsig
         q.pop_front();
         
         if(removed->getDepth() > maxDepth)
-            break;
+            continue;
         else if(removed->getConfig() == solution->getConfig()){
             string str = removed->makePath();
             delete initialNode;

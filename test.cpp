@@ -22,7 +22,7 @@ int main(){
     Config initialConfig = Config(vec2);
     Config finalConfig = Config(vec);
 
-    cout << BFS(initialConfig, finalConfig) << endl;
+    cout << IDFS(initialConfig, finalConfig, 25) << endl;
 
     return 0;
 }
