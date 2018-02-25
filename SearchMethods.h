@@ -12,6 +12,19 @@
 
 using namespace std;
 
+
+//Prototype declarations
+unsigned int inversions(Config &initialConfig);
+bool solutionExists(Config &initialConfig, Config &finalConfig);
+string GENERAL_SEARCH(Config &initialConfig, Config &finalConfig, int pos, unsigned int maxDepth);
+string DFS(Config &initialConfig, Config &finalConfig);
+string BFS(Config &initialConfig, Config &finalConfig);
+string BFS(Config &initialConfig, Config &finalConfig, int i);
+string LDFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth);
+string IDFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth);
+string ASTAR(Config &initialConfig, Config &finalConfig);
+void GreedyWithHeuristics();
+
 //Function to check if we can reach a solution from the initial configuration
 unsigned int inversions(Config &initialConfig){
     unsigned int n=0;
@@ -36,7 +49,8 @@ unsigned int inversions(Config &initialConfig){
 }
 
 bool solutionExists(Config &initialConfig, Config &finalConfig){
-    return (inversions(initialConfig)%2 == 0) == (abs((int)initialConfig.getEmptyRowIndex()-4)%2 == 1);
+    return (inversions(initialConfig)%2 == 0) == (abs((int)initialConfig.getEmptyRowIndex()-4)%2 == 1) == 
+            (inversions(finalConfig)%2 == 0) == (abs((int)finalConfig.getEmptyRowIndex()-4)%2 == 1);
 }
 
 //General Search Algorithm to search for a solution
@@ -57,7 +71,6 @@ string GENERAL_SEARCH(Config &initialConfig, Config &finalConfig, int pos, unsig
         Node *removed = q.front();
         q.pop_front();
 
-        cout << "Depth: " << removed->getDepth() << "   Move: " << removed->getMove() << "   Parent: " << removed->getParent() << endl;
         removed->display();
         
         if(removed->getDepth() > maxDepth)

@@ -46,6 +46,8 @@ public:
     string makePath();
 };
 
+
+
 //Constructor for the Node class (for args: void, vector<int> , Config and (Node,char))
 Node::Node(){
     cfg = Config();
@@ -87,9 +89,13 @@ Node::~Node(){
         delete *itr;
 }
 
+
+
 void Node::setPathCost(unsigned int cost){
     pathCost = cost;
 }
+
+
 
 //Getters
 Config Node::getConfig() const{
@@ -116,9 +122,11 @@ vector<Node*> Node::getChildren() const{
     return children;
 }
 
+
+
 //Print the board on stdout
 void Node::display(){
-    cout << "Depth: " << depth << "\tMove: " << move <<  endl;
+    cout << "Depth: " << depth << "\tMove: " << move << " \tParent: " << parent << endl;
     cfg.display();
 }
 
@@ -152,6 +160,8 @@ string Node::makePath(){
 
     return string(path.rbegin(), path.rend());  //reverse the string
 }
+
+
 
 //Operator overloading for sorting using pathCost
 bool operator<(const Node& left, const Node& right){

@@ -5,7 +5,9 @@ h(n) = h1(n) or h2(n) where h1(n) is the number of misplaced tiles and h2(n) the
 
 #include <vector>
 #include <cmath>
+
 #include "Node.h"
+
 using namespace std;
 
 //Prototype declarations

@@ -34,6 +34,8 @@ public:
     void move(const char &move);
 };
 
+
+
 //Constructors for the Config class (for args: void and vector<int>) 
 Config::Config(){
     for(unsigned int i = 0 ; i < 4 ; i++){
@@ -62,6 +64,8 @@ Config::Config(const vector<int> vec){
     }
 }
 
+
+
 //Methods of the Config Class
 vector< vector<int> > Config::getMatrix() const{
     return matrix;
@@ -74,6 +78,8 @@ unsigned int Config::getEmptyRowIndex() const{
 unsigned int Config::getEmptyColumnIndex() const{
     return emptyColumnIndex;
 }
+
+
 
 //Print the board on stdout
 void Config::display(){
@@ -135,6 +141,8 @@ void Config::move(const char &move){
             break;
     }
 }
+
+
 
 //Operator Overloading functions to simplify the code
 bool operator==(const Config& left, const Config& right){
