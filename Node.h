@@ -5,7 +5,7 @@ a depth to retain how many moves we needed to do to reach the configuration
 and a pathCost to ....................*/
 
 #include <iostream>
-#include <vector>
+#include <array>
 #include <string>
 #include <algorithm>
 
@@ -14,8 +14,8 @@ and a pathCost to ....................*/
 using namespace std;
 
 class Node{
-    friend bool operator<(const Node& left, const Node& right);
-    friend bool operator>(const Node& left, const Node& right);
+    friend inline bool operator<(const Node& left, const Node& right);
+    friend inline bool operator>(const Node& left, const Node& right);
 
 private:
     Config cfg;
@@ -23,26 +23,26 @@ private:
     char move;  //Start: 'a'; Up: 'u'; Down: 'd'; Left: 'l'; Right: 'r'
     unsigned int depth;
     unsigned int pathCost;
-    vector<Node*> children;
+    array<Node*, 4> children;
 
 public:
     Node();
-    Node(const vector<int> &vec);
+    Node(const array<int, 16>& arr);
     Node(const Config &cfg_);
     Node(Node &node, const char &move);
     ~Node();
 
     void setPathCost(const unsigned int cost);
 
-    Config getConfig() const;
-    Node* getParent() const;
-    char getMove() const;
-    unsigned int getDepth() const;
-    unsigned int getPathCost() const;
-    vector<Node*> getChildren() const;
+    inline Config getConfig() const;
+    inline Node* getParent() const;
+    inline char getMove() const;
+    inline unsigned int getDepth() const;
+    inline unsigned int getPathCost() const;
+    inline array<Node*, 4> getChildren() const;
 
     void display();
-    vector<Node*> makeDescendants(const Node &root);
+    array<Node*, 4> makeDescendants();
     string makePath();
 };
 
@@ -55,14 +55,18 @@ Node::Node(){
     move = 'a';
     depth = 0;
     pathCost = 0;
+    for(unsigned int i=0; i<4; i++)
+        children[i] = NULL;
 }
 
-Node::Node(const vector<int> &vec){
-    cfg = Config(vec);
+Node::Node(const array<int, 16>& arr){
+    cfg = Config(arr);
     parent = NULL;
     move = 'a';
     depth = 0;
     pathCost = 0;
+    for(unsigned int i=0; i<4; i++)
+        children[i] = NULL;
 }
 
 Node::Node(const Config &cfg_){
@@ -71,6 +75,8 @@ Node::Node(const Config &cfg_){
     move = 'a';
     depth = 0;
     pathCost = 0;
+    for(unsigned int i=0; i<4; i++)
+        children[i] = NULL;
 }
 
 Node::Node(Node &node, const char &mv){
@@ -81,12 +87,18 @@ Node::Node(Node &node, const char &mv){
     depth = node.getDepth() + 1;
     pathCost = node.getPathCost() + 1;
 
-    node.children.push_back(this); //It seem that i can access node private parts, because they are within this context
+    for(unsigned int i=0; i<4; i++){
+        if(children[i]==NULL){
+            children[i] = this;
+            break;
+        }
+    }
 }
 
 Node::~Node(){
-    for(vector<Node*>::iterator itr = children.begin(); itr != children.end(); itr++)
-        delete *itr;
+    for(unsigned int i=0; i<4; i++)
+        if(children[i]!=NULL)
+            delete children[i];
 }
 
 
@@ -98,27 +110,27 @@ void Node::setPathCost(unsigned int cost){
 
 
 //Getters
-Config Node::getConfig() const{
+inline Config Node::getConfig() const{
     return cfg;
 }
 
-Node* Node::getParent() const{
+inline Node* Node::getParent() const{
     return parent;
 }
 
-char Node::getMove() const{
+inline char Node::getMove() const{
     return move;
 }
 
-unsigned int Node::getDepth() const{
+inline unsigned int Node::getDepth() const{
     return depth;
 }
 
-unsigned int Node::getPathCost() const{
+inline unsigned int Node::getPathCost() const{
     return pathCost;
 }
 
-vector<Node*> Node::getChildren() const{
+inline array<Node*, 4> Node::getChildren() const{
     return children;
 }
 
@@ -134,13 +146,15 @@ void Node::display(){
 //i.e.: move up, down, left and right
 //It will generate 4 Nodes at max (node not on limit of rows or columns)
 //And 2 at min (Node in corner)
-vector<Node*> Node::makeDescendants(const Node &root){
-    vector<char> moves = cfg.possibleMoves();
-    vector<Node*> l;
+array<Node*, 4> Node::makeDescendants(){
+    array<char, 4> moves = cfg.possibleMoves();
+    array<Node*, 4> l = {};
+    unsigned int index = 0;
 
-    for(unsigned int i=0; i<moves.size(); i++){
-        Node *node = new Node(*this, moves.at(i));
-        l.push_back(node);
+    for(unsigned int i=0; i<4 && moves[i]!=0; i++){
+        Node *node = new Node(*this, moves[i]);
+        l[index] = node;
+        index++;
     }
 
     return l;
@@ -164,11 +178,11 @@ string Node::makePath(){
 
 
 //Operator overloading for sorting using pathCost
-bool operator<(const Node& left, const Node& right){
+inline bool operator<(const Node& left, const Node& right){
     return (left.pathCost < right.pathCost);
 }
 
-bool operator>(const Node& left, const Node& right){
+inline bool operator>(const Node& left, const Node& right){
     return (left.pathCost > right.pathCost);
 }
 

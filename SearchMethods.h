@@ -1,7 +1,7 @@
 /*Search Functions for the 15-Puzzle*/
 
 #include <iostream>
-#include <vector>
+#include <array>
 #include <deque>
 #include <limits>
 #include <string>
@@ -11,7 +11,6 @@
 #include "Heuristics.h"
 
 using namespace std;
-
 
 //Prototype declarations
 unsigned int inversions(Config &initialConfig);
@@ -25,22 +24,29 @@ string IDFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth);
 string ASTAR(Config &initialConfig, Config &finalConfig);
 void GreedyWithHeuristics();
 
+void insertionSort(array<Node*, 4> &v){
+    for(size_t i=0; i<4 && v[i]!=NULL; i++){
+        for(size_t j=i; j>0 && *v[j-1]>*v[j]; j--)
+            swap(v[j-1], v[j]);
+    }
+}
+
 //Function to check if we can reach a solution from the initial configuration
 unsigned int inversions(Config &initialConfig){
     unsigned int n=0;
 
-    vector< vector<int> > matrix = initialConfig.getMatrix();
+    array< array<int, 4>, 4> matrix = initialConfig.getMatrix();
 
-    vector<int> vec;
+    array<int, 16> arr;
     for(unsigned int i=0; i < 4; i++){
         for(unsigned int j=0; j < 4; j++)
-            vec.push_back(matrix.at(i).at(j));
+            arr[i*4 + j] = matrix[i][j];
     }
 
     for(unsigned int i=0; i < 16; i++){
-        n += vec.at(i);
+        n += arr[i];
         for(unsigned int j=0; j <= i; j++){
-            if(vec.at(i) >= vec.at(j) && vec.at(i)!=0 && vec.at(j)!=0)
+            if(arr[i] >= arr[j] && arr[i]!=0 && arr[j]!=0)
                 n--;
         }
     }
@@ -49,14 +55,16 @@ unsigned int inversions(Config &initialConfig){
 }
 
 bool solutionExists(Config &initialConfig, Config &finalConfig){
-    return (inversions(initialConfig)%2 == 0) == (abs((int)initialConfig.getEmptyRowIndex()-4)%2 == 1) == 
-            (inversions(finalConfig)%2 == 0) == (abs((int)finalConfig.getEmptyRowIndex()-4)%2 == 1);
+    return ((inversions(initialConfig)%2 == 0) == (abs((int)initialConfig.getEmptyRowIndex()-4)%2 == 1)) == 
+            ((inversions(finalConfig)%2 == 0) == (abs((int)finalConfig.getEmptyRowIndex()-4)%2 == 1));
 }
 
 //General Search Algorithm to search for a solution
-string GENERAL_SEARCH(Config &initialConfig, Config &finalConfig, int pos, unsigned int maxDepth){
+string GENERAL_SEARCH(Config &initialConfig, Config &finalConfig, int pos, unsigned int maxDepth, unsigned int& generatedNodes){
     Node *initialNode = new Node(initialConfig);
     Node *solution = new Node(finalConfig);
+
+    generatedNodes+=2;
 
     if(!solutionExists(initialConfig, finalConfig)){
         delete initialNode;
@@ -71,9 +79,7 @@ string GENERAL_SEARCH(Config &initialConfig, Config &finalConfig, int pos, unsig
         Node *removed = q.front();
         q.pop_front();
 
-        removed->display();
-        
-        if(removed->getDepth() > maxDepth)
+        if(removed->getDepth() >= maxDepth)
             continue;
         else if(removed->getConfig() == solution->getConfig()){
             string str = removed->makePath();
@@ -82,7 +88,7 @@ string GENERAL_SEARCH(Config &initialConfig, Config &finalConfig, int pos, unsig
             return str;
         }
 
-        vector<Node*> descendantList = removed->makeDescendants(*initialNode);
+        array<Node*, 4> descendantList = removed->makeDescendants();
 
 // Se pos for 0, entao a funcao de inserir na fila vai inserir os elementos no inicio da fila
 // Se pos for 1, entao a funcao de inserir na fila vai inserir os elementos no fim da fila
@@ -90,14 +96,25 @@ string GENERAL_SEARCH(Config &initialConfig, Config &finalConfig, int pos, unsig
 //em vez de pos meter um iterator
 //adicionamos ao elemento q essa função para poder fazer q.begin() etc
 
-        if(pos == 0)
-            q.insert(q.begin(), descendantList.begin(), descendantList.end());
-        else if (pos == 1)
-            q.insert(q.end(), descendantList.begin(), descendantList.end());
+        if(pos == 0){
+            for(unsigned int i=0; i<4 && descendantList[i]!=NULL; i++){
+                generatedNodes++;
+                q.push_front(descendantList[i]);
+            }
+        }
+        else if (pos == 1){
+            for(unsigned int i=0; i<4 && descendantList[i]!=NULL; i++){
+                generatedNodes++;
+                q.push_back(descendantList[i]);
+            }
+        }
         else{   //pos == 2, using A*
             calcPathCost(descendantList,solution->getConfig()); //calculates the pathCost for each of the children Nodes
-            sort(descendantList.begin(),descendantList.end());  //sorts array so that the children Node with the less pathCost enters first in the queue
-            q.insert(q.end(), descendantList.begin(), descendantList.end());
+            insertionSort(descendantList);  //sorts array so that the children Node with the less pathCost enters first in the queue
+            for(unsigned int i=0; i<4 && descendantList[i]!=NULL; i++){
+                generatedNodes++;
+                q.push_back(descendantList[i]);
+            }
         }
     }
 
@@ -108,25 +125,39 @@ string GENERAL_SEARCH(Config &initialConfig, Config &finalConfig, int pos, unsig
 }
 
 string DFS(Config &initialConfig, Config &finalConfig){ /*Depth first search function*/
-    return GENERAL_SEARCH(initialConfig, finalConfig, 0, 25);
+    unsigned int generatedNodes = 0;
+    string str = GENERAL_SEARCH(initialConfig, finalConfig, 0, 25, generatedNodes);
+    cout << "Nós gerados: " << generatedNodes << endl;
+    return str;
 }
 
 string BFS(Config &initialConfig, Config &finalConfig){ /*Breadth first search function*/
-    return GENERAL_SEARCH(initialConfig, finalConfig, 1, 25);
+    unsigned int generatedNodes = 0;
+    string str = GENERAL_SEARCH(initialConfig, finalConfig, 1, 25, generatedNodes);
+    cout << "Nós gerados: " << generatedNodes << endl;
+    return str;
 }
 
 /*BFS with Heuristics : has another argument "FLAG" : function overloading*/
-string BFS(Config &initialConfig, Config &finalConfig, int i){  /*Breadth first search function*/
-    return GENERAL_SEARCH(initialConfig, finalConfig, i, 25);
+string BFS(Config &initialConfig, Config &finalConfig, int i){
+    unsigned int generatedNodes = 0;
+    string str = GENERAL_SEARCH(initialConfig, finalConfig, i, 25, generatedNodes);
+    cout << "Nós gerados: " << generatedNodes << endl;
+    return str;
 }
 
 string LDFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth){ /*Limited Breadth first search function*/
-    return GENERAL_SEARCH(initialConfig, finalConfig, 0, maxDepth);
+    unsigned int generatedNodes = 0;
+    string str = GENERAL_SEARCH(initialConfig, finalConfig, 0, maxDepth, generatedNodes);
+    cout << "Nós gerados: " << generatedNodes << endl;
+    return str;
 }
 
 string IDFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth){  /*Iterative Depth first search function*/
-    for(unsigned int i=0; i<=maxDepth; i++){
-        string str = GENERAL_SEARCH(initialConfig, finalConfig, 0, i);
+    for(unsigned int i=1; i<=maxDepth; i++){
+        unsigned int generatedNodes = 0;
+        string str = GENERAL_SEARCH(initialConfig, finalConfig, 0, i, generatedNodes);
+        cout << "Altura: " << i << "   \tNós gerados: " << generatedNodes << endl;
         if(str != "Solution not found")
             return str;
     }

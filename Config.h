@@ -5,7 +5,7 @@ the coordinated where the empty space is located*/
 
 #include <iostream>
 #include <iomanip>
-#include <vector>
+#include <array>
 
 using namespace std;
 
@@ -13,69 +13,65 @@ using namespace std;
 #define EMPTY_SPACE_NUMBER 0
 
 class Config{
-    friend bool operator==(const Config& left, const Config& right);
-    friend bool operator!=(const Config& left, const Config& right);
+    friend inline bool operator==(const Config& left, const Config& right);
+    friend inline bool operator!=(const Config& left, const Config& right);
 
 private:
-    vector< vector<int> > matrix;
+    array< array<int, 4>, 4> matrix;
     unsigned int emptyRowIndex;   //x position of the empty space
     unsigned int emptyColumnIndex;   //y position of the empty space
 
 public:
     Config();
-    Config(const vector<int> vec);
+    Config(const array<int, 16>& arr);
 
-    vector< vector<int> > getMatrix() const;
-    unsigned int getEmptyRowIndex() const;
-    unsigned int getEmptyColumnIndex() const;
+    inline array< array<int, 4>, 4> getMatrix() const;
+    inline unsigned int getEmptyRowIndex() const;
+    inline unsigned int getEmptyColumnIndex() const;
 
     void display();
-    vector<char> possibleMoves();
-    void move(const char &move);
+    array<char, 4> possibleMoves();
+    void move(const char& move);
 };
 
 
 
 //Constructors for the Config class (for args: void and vector<int>) 
 Config::Config(){
-    for(unsigned int i = 0 ; i < 4 ; i++){
-        vector<int> vec;
-        for(unsigned int j = 0 ; j < 4 ; j++){
-            vec.push_back(i*4 + j + 1);
-        }
-        matrix.push_back(vec);
+    for(unsigned int i = 0; i < 4; i++){
+        for(unsigned int j = 0; j < 4; j++)
+            matrix[i][j] = i*4 + j + 1;
     }
-    matrix.at(3).at(3) = EMPTY_SPACE_NUMBER;
+
+    matrix[3][3] = EMPTY_SPACE_NUMBER;
     emptyRowIndex = 3;
     emptyColumnIndex = 3;
 }
 
-Config::Config(const vector<int> vec){
-    for(unsigned int i = 0 ; i < 4 ; i++){
-        vector<int> vec_aux;
-        for(unsigned int j = 0 ; j < 4 ; j++){
-            vec_aux.push_back(vec[i*4 + j]);
-            if(vec.at(i*4 + j) == EMPTY_SPACE_NUMBER){
+Config::Config(const array<int, 16>& arr){
+    for(unsigned int i = 0; i < 4; i++){
+        for(unsigned int j = 0; j < 4; j++){
+            matrix[i][j] = arr[i*4 + j];
+            if(arr[i*4 + j] == EMPTY_SPACE_NUMBER){
                 emptyRowIndex = i;
                 emptyColumnIndex = j;
             }
         }
-        matrix.push_back(vec_aux);
     }
 }
 
 
 
 //Methods of the Config Class
-vector< vector<int> > Config::getMatrix() const{
+inline array< array<int, 4>, 4> Config::getMatrix() const{
     return matrix;
 }
 
-unsigned int Config::getEmptyRowIndex() const{
+inline unsigned int Config::getEmptyRowIndex() const{
     return emptyRowIndex;
 }
 
-unsigned int Config::getEmptyColumnIndex() const{
+inline unsigned int Config::getEmptyColumnIndex() const{
     return emptyColumnIndex;
 }
 
@@ -86,7 +82,7 @@ void Config::display(){
     cout << "+-----------------+" << endl;
     for(unsigned int i=0; i<4; i++){
         for(unsigned int j=0; j<4; j++){
-            cout << setw(4) << matrix.at(i).at(j);
+            cout << setw(4) << matrix[i][j];
         }
         cout << endl;
     }
@@ -94,47 +90,49 @@ void Config::display(){
 }
 
 //Return a vector with all the possible moves from the current position
-vector<char> Config::possibleMoves(){
-    vector<char> moves = {'u', 'd', 'l', 'r'};
-    vector<char> possibles;
+array<char, 4> Config::possibleMoves(){
+    array<char, 4> moves = {'u', 'd', 'l', 'r'};
+    array<char, 4> possibles = {};
+    unsigned int index = 0;
 
     for(unsigned int i=0; i<4; i++){
-        if(emptyRowIndex==0 && moves.at(i) == 'u')
+        if(emptyRowIndex==0 && moves[i] == 'u')
             continue;
-        else if(emptyRowIndex==3 && moves.at(i) == 'd')
+        else if(emptyRowIndex==3 && moves[i] == 'd')
             continue;
-        else if(emptyColumnIndex==0 && moves.at(i) == 'l')
+        else if(emptyColumnIndex==0 && moves[i] == 'l')
             continue;
-        else if(emptyColumnIndex==3 && moves.at(i) == 'r')
+        else if(emptyColumnIndex==3 && moves[i] == 'r')
             continue;
 
-        possibles.push_back(moves.at(i));
+        possibles[index] = moves[i];
+        index++;
     }
 
     return possibles;
 }
 
 //Move the empty space
-void Config::move(const char &move){
+void Config::move(const char& move){
     switch(move){
         case 'u':
-            matrix.at(emptyRowIndex).at(emptyColumnIndex) = matrix.at(emptyRowIndex-1).at(emptyColumnIndex);
-            matrix.at(emptyRowIndex-1).at(emptyColumnIndex) = 0;
+            matrix[emptyRowIndex][emptyColumnIndex] = matrix[emptyRowIndex-1][emptyColumnIndex];
+            matrix[emptyRowIndex-1][emptyColumnIndex] = 0;
             emptyRowIndex-=1;
             break;
         case 'd':
-            matrix.at(emptyRowIndex).at(emptyColumnIndex) = matrix.at(emptyRowIndex+1).at(emptyColumnIndex);
-            matrix.at(emptyRowIndex+1).at(emptyColumnIndex) = 0;
+            matrix[emptyRowIndex][emptyColumnIndex] = matrix[emptyRowIndex+1][emptyColumnIndex];
+            matrix[emptyRowIndex+1][emptyColumnIndex] = 0;
             emptyRowIndex+=1;
             break;
         case 'l':
-            matrix.at(emptyRowIndex).at(emptyColumnIndex) = matrix.at(emptyRowIndex).at(emptyColumnIndex-1);
-            matrix.at(emptyRowIndex).at(emptyColumnIndex-1) = 0;
+            matrix[emptyRowIndex][emptyColumnIndex] = matrix[emptyRowIndex][emptyColumnIndex-1];
+            matrix[emptyRowIndex][emptyColumnIndex-1] = 0;
             emptyColumnIndex-=1;
             break;
         case 'r':
-            matrix.at(emptyRowIndex).at(emptyColumnIndex) = matrix.at(emptyRowIndex).at(emptyColumnIndex+1);
-            matrix.at(emptyRowIndex).at(emptyColumnIndex+1) = 0;
+            matrix[emptyRowIndex][emptyColumnIndex] = matrix[emptyRowIndex][emptyColumnIndex+1];
+            matrix[emptyRowIndex][emptyColumnIndex+1] = 0;
             emptyColumnIndex+=1;
             break;
         default:
@@ -145,16 +143,33 @@ void Config::move(const char &move){
 
 
 //Operator Overloading functions to simplify the code
-bool operator==(const Config& left, const Config& right){
+inline bool operator==(const Config& left, const Config& right){
     for(unsigned int i=0; i<4; i++){
         for(unsigned int j=0; j<4; j++){
-            if(left.matrix.at(i).at(j) != right.matrix.at(i).at(j))
+            if(left.matrix[i][j] != right.matrix[i][j])
                 return false;
         }
     }
     return true;
 }
 
-bool operator!=(const Config& left, const Config& right){
+inline bool operator!=(const Config& left, const Config& right){
     return !(left == right);
+}
+
+
+
+namespace std{
+    template <>
+    struct hash<Config>{
+        size_t operator()(const Config& cfg) const noexcept{
+            size_t ret = 0;
+            for(unsigned int i=0; i<4; i++){
+                for(unsigned int j=0; j<4; j++)
+                    ret ^= hash<int>()(cfg.getMatrix()[i][j]);
+            }
+
+            return ret;
+        }
+    };
 }
