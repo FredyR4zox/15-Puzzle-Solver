@@ -77,6 +77,7 @@ string GENERAL_SEARCH_DFS(Config &initialConfig, Config &finalConfig, unsigned i
         visitedNodes++;
 
         if(removed->getConfig() == solution->getConfig()){
+            cout << "Solução encontrada na profundidade: " << removed->getDepth() << endl;
             string str = removed->makePath();
             delete initialNode;
             delete solution;
@@ -122,6 +123,7 @@ string GENERAL_SEARCH_BFS(Config &initialConfig, Config &finalConfig, unsigned i
         visitedNodes++;
 
         if(removed->getConfig() == solution->getConfig()){
+            cout << "Solução encontrada na profundidade: " << removed->getDepth() << endl;
             string str = removed->makePath();
             delete initialNode;
             delete solution;
@@ -160,6 +162,7 @@ string GENERAL_SEARCH_ASTAR(Config &initialConfig, Config &finalConfig, unsigned
         visitedNodes++;
 
         if(removed->getConfig() == solution->getConfig()){
+            cout << "Solução encontrada na profundidade: " << removed->getDepth() << endl;
             string str = removed->makePath();
             delete initialNode;
             delete solution;
@@ -200,6 +203,7 @@ string GENERAL_SEARCH_GREEDY(Config &initialConfig, Config &finalConfig, unsigne
         visitedNodes++;
 
         if(removed->getConfig() == solution->getConfig()){
+            cout << "Solução encontrada na profundidade: " << removed->getDepth() << endl;
             string str = removed->makePath();
             delete initialNode;
             delete solution;
