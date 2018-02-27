@@ -157,19 +157,17 @@ inline bool operator!=(const Config& left, const Config& right){
     return !(left == right);
 }
 
-
-
 namespace std{
     template <>
     struct hash<Config>{
         size_t operator()(const Config& cfg) const noexcept{
-            size_t ret = 0;
+            size_t hash = 0;
             for(unsigned int i=0; i<4; i++){
                 for(unsigned int j=0; j<4; j++)
-                    ret ^= hash<int>()(cfg.getMatrix()[i][j]);
+                    hash = (hash * 256 + cfg.getMatrix()[i][j]) % 16;
             }
 
-            return ret;
+            return hash;
         }
     };
 }

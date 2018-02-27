@@ -8,6 +8,7 @@ and a pathCost to ....................*/
 #include <array>
 #include <string>
 #include <algorithm>
+#include <unordered_set>
 
 #include "Config.h"
 
@@ -42,7 +43,7 @@ public:
     inline array<Node*, 4> getChildren() const;
 
     void display();
-    array<Node*, 4> makeDescendants();
+    array<Node*, 4> makeDescendants(unordered_set<Config>& hashSet);
     string makePath();
 };
 
@@ -146,13 +147,15 @@ void Node::display(){
 //i.e.: move up, down, left and right
 //It will generate 4 Nodes at max (node not on limit of rows or columns)
 //And 2 at min (Node in corner)
-array<Node*, 4> Node::makeDescendants(){
+array<Node*, 4> Node::makeDescendants(unordered_set<Config>& hashSet){
     array<char, 4> moves = cfg.possibleMoves();
     array<Node*, 4> l = {};
     unsigned int index = 0;
 
     for(unsigned int i=0; i<4 && moves[i]!=0; i++){
         Node *node = new Node(*this, moves[i]);
+        if(hashSet.insert(node->getConfig()).second == false)
+            continue;
         l[index] = node;
         index++;
     }
@@ -178,6 +181,12 @@ string Node::makePath(){
 
 
 //Operator overloading for sorting using pathCost
+struct compareNodes{
+    bool operator()(const Node* left, const Node* right) const{
+        return (left->getPathCost() > right->getPathCost());
+    }
+};
+
 inline bool operator<(const Node& left, const Node& right){
     return (left.pathCost < right.pathCost);
 }

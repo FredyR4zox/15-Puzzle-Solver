@@ -8,7 +8,7 @@
 using namespace std;
 
 int main(int argc, char const *argv[]){
-    if(argc < 2 || (!strcmp(argv[1], "IDFS") && argc!=3)){
+    if(argc < 2 || (!strcmp(argv[1], "IDFS") && argc!=3) || (!strcmp(argv[1],"ASTAR") && argc !=3) || (!strcmp(argv[1],"GULOSA") && argc != 3) ){
         cout << "Uso: " << argv[0] << " [Método de busca] [Opções de busca]" << endl;
         cout << "Tipos de busca:" << endl;
         cout << "   ASTAR -> efetua busca A*;" << endl;
@@ -16,6 +16,10 @@ int main(int argc, char const *argv[]){
         cout << "   BFS -> efetua busca em largura;" << endl;
         cout << "   DFS -> efetua busca em profundidade;" << endl;
         cout << "   IDFS [profundiade maxima] -> efetua busca em profundidade, onde profundidade máxima é o seu limite." << endl;
+        cout << "Tipos de Heuristica (ASTAR e Gulosa):" << endl;
+        cout << "   0: Nº de peças fora da posição final" << endl;
+        cout << "   1: Manhattan Distance (Somatório das distâncias de cada peça da sua posição final)" << endl;
+        cout << "   2: Soma das duas Heuristicas" << endl;
         return 1;
     }
 
@@ -49,13 +53,18 @@ int main(int argc, char const *argv[]){
     }
     else if(!strcmp(argv[1], "ASTAR")){
         clock1 = clock();
-        cout << "A* path: " << ASTAR(initialConfig, finalConfig) << endl;
+        cout << "A* path: " << ASTAR(initialConfig, finalConfig, atoi(argv[2])) << endl;
         clock2 = clock();
     }
-    else
+    else if (!strcmp(argv[1], "GULOSA")){
+        clock1 = clock();
+        cout << "Greedy Path: " << GREEDY(initialConfig, finalConfig, atoi(argv[2])) << endl;
+        clock2 = clock();
+        }
+    else {
         cout << "Tipo de busca não existente." << endl;
-
-    cout << "Tempo de execução: " << clock2-clock1 << endl;
+    }
+    cout << "Tempo de execução: " << ((float)clock2-clock1)/CLOCKS_PER_SEC << endl;
 
     return 0;
 }
