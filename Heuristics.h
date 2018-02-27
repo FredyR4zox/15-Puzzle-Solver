@@ -14,8 +14,8 @@ using namespace std;
 int calcH1(Node *actual, Config goal);
 int calcH2(Node *actual, Config goal);
 array<int, 2> getColRowFinal(Config goal, int value);
-void calcPathCost(array<Node*, 4> v, Config goal, unsigned int heuristic);
-void calcPathCostGreedy(array<Node*, 4> v, Config goal, unsigned int heuristic);
+void calcPathCostASTAR(array<Node*, 4> v, Config goal, unsigned int heuristic);
+void calcPathCostGREEDY(array<Node*, 4> v, Config goal, unsigned int heuristic);
 
 
 //The sum of h1+h2 is the weight of the Node. This way, A* can know what Node to expand first. Less is better.
@@ -40,7 +40,7 @@ void calcPathCostASTAR(array<Node*, 4> v, Config goal,unsigned int heuristic){
     }
 }
 
-void calcPathCostGreedy(array<Node*, 4> v, Config goal,unsigned int heuristic){
+void calcPathCostGREEDY(array<Node*, 4> v, Config goal,unsigned int heuristic){
     switch (heuristic) {
         case 0:  
                 for(unsigned int i = 0; i<4 && v[i]!=NULL ; i++){

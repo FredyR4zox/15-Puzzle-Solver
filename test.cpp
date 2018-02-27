@@ -15,19 +15,21 @@ int main(int argc, char const *argv[]){
         cout << "   GULOSA -> efetua busca Gulosa;" << endl;
         cout << "   BFS -> efetua busca em largura;" << endl;
         cout << "   DFS -> efetua busca em profundidade;" << endl;
-        cout << "   IDFS [profundiade maxima] -> efetua busca em profundidade, onde profundidade máxima é o seu limite." << endl;
+        cout << "   IDFS [profundidade maxima] -> efetua busca em profundidade, onde profundidade máxima é o seu limite;" << endl;
         cout << "Tipos de Heuristica (ASTAR e Gulosa):" << endl;
-        cout << "   0: Nº de peças fora da posição final" << endl;
-        cout << "   1: Manhattan Distance (Somatório das distâncias de cada peça da sua posição final)" << endl;
-        cout << "   2: Soma das duas Heuristicas" << endl;
+        cout << "   0: Nº de peças fora da posição final;" << endl;
+        cout << "   1: Manhattan Distance (Somatório das distâncias de cada peça da sua posição final);" << endl;
+        cout << "   2: Soma das duas Heuristicas;" << endl;
         return 1;
     }
 
     Node node = Node();
+    cout << "Tabuleiro Final:" << endl;
     node.display();
 
     array<int, 16> vec = {1, 0, 2, 4, 10, 11, 3, 7, 5, 15, 6, 8, 9, 13, 14, 12};
     Node node2 = Node(vec);
+    cout << "Tabuleiro Inicial:" << endl;
     node2.display();
 
     Config initialConfig = Config(vec);
@@ -64,7 +66,7 @@ int main(int argc, char const *argv[]){
     else {
         cout << "Tipo de busca não existente." << endl;
     }
-    cout << "Tempo de execução: " << ((float)clock2-clock1)/CLOCKS_PER_SEC << endl;
+    cout << "Tempo de execução: " << ((float)clock2-clock1)/CLOCKS_PER_SEC << " segundos" << endl;
 
     return 0;
 }

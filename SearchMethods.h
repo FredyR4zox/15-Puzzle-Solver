@@ -20,7 +20,8 @@ bool solutionExists(Config &initialConfig, Config &finalConfig);
 
 string GENERAL_SEARCH_DFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int& generatedNodes);
 string GENERAL_SEARCH_BFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int& generatedNodes);
-string GENERAL_SEARCH_HEURISTICS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int& generatedNodes);
+string GENERAL_SEARCH_GREEDY(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int heuristicsFlag, unsigned int& generatedNodes);
+string GENERAL_SEARCH_ASTAR(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int heuristicsFlag, unsigned int& generatedNodes);
 
 string DFS(Config &initialConfig, Config &finalConfig);
 string LDFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth);
@@ -152,7 +153,7 @@ string GENERAL_SEARCH_BFS(Config &initialConfig, Config &finalConfig, unsigned i
 }
 
 //General Search Algorithm to search for a solution
-string GENERAL_SEARCH_HEURISTICS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int heuristicsFlag, unsigned int& generatedNodes){
+string GENERAL_SEARCH_ASTAR(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int heuristicsFlag, unsigned int& generatedNodes){
     Node *initialNode = new Node(initialConfig);
     Node *solution = new Node(finalConfig);
 
@@ -182,7 +183,7 @@ string GENERAL_SEARCH_HEURISTICS(Config &initialConfig, Config &finalConfig, uns
 
         if(removed->getDepth() < maxDepth){
             array<Node*, 4> descendantList = removed->makeDescendants(hashSet);
-            calcPathCost(descendantList, finalConfig); //calculates the pathCost for each of the children Nodes
+            calcPathCostASTAR(descendantList, finalConfig, heuristicsFlag); //calculates the pathCost for each of the children Nodes
             for(unsigned int i=0; i<4 && descendantList[i]!=NULL; i++){
                 generatedNodes++;
                 q.push(descendantList[i]);
@@ -195,6 +196,53 @@ string GENERAL_SEARCH_HEURISTICS(Config &initialConfig, Config &finalConfig, uns
 
     return "Solution not found";
 }
+
+
+//General Search Algorithm to search for a solution
+string GENERAL_SEARCH_GREEDY(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int heuristicsFlag, unsigned int& generatedNodes){
+    Node *initialNode = new Node(initialConfig);
+    Node *solution = new Node(finalConfig);
+
+    generatedNodes+=2;
+
+    if(!solutionExists(initialConfig, finalConfig)){
+        delete initialNode;
+        delete solution;
+        return "Solution not found";    //There is no solution
+    }
+
+    priority_queue<Node*, vector<Node*>, compareNodes> q;
+    q.push(initialNode);
+
+    unordered_set<Config> hashSet;
+
+    while(!q.empty()){
+        Node *removed = q.top();
+        q.pop();
+
+        if(removed->getConfig() == solution->getConfig()){
+            string str = removed->makePath();
+            delete initialNode;
+            delete solution;
+            return str;
+        }
+
+        if(removed->getDepth() < maxDepth){
+            array<Node*, 4> descendantList = removed->makeDescendants(hashSet);
+            calcPathCostGREEDY(descendantList, finalConfig,heuristicsFlag); //calculates the pathCost for each of the children Nodes
+            for(unsigned int i=0; i<4 && descendantList[i]!=NULL; i++){
+                generatedNodes++;
+                q.push(descendantList[i]);
+            }
+        }
+    }
+
+    delete initialNode;
+    delete solution;
+
+    return "Solution not found";
+}
+
 
 string DFS(Config &initialConfig, Config &finalConfig){ /*Depth first search function*/
     unsigned int generatedNodes = 0;
