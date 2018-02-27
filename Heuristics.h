@@ -4,18 +4,17 @@
 h(n) = h1(n) or h2(n) where h1(n) is the number of misplaced tiles and h2(n) the Manhattan distance*/
 
 #include <array>
-#include <cmath>
 
 #include "Node.h"
 
 using namespace std;
 
 //Prototype declarations
+void calcPathCostASTAR(array<Node*, 4> v, Config goal, unsigned int heuristic);
+void calcPathCostGREEDY(array<Node*, 4> v, Config goal, unsigned int heuristic);
 int calcH1(Node *actual, Config goal);
 int calcH2(Node *actual, Config goal);
 array<int, 2> getColRowFinal(Config goal, int value);
-void calcPathCostASTAR(array<Node*, 4> v, Config goal, unsigned int heuristic);
-void calcPathCostGREEDY(array<Node*, 4> v, Config goal, unsigned int heuristic);
 
 
 //The sum of h1+h2 is the weight of the Node. This way, A* can know what Node to expand first. Less is better.
@@ -25,43 +24,47 @@ void calcPathCostGREEDY(array<Node*, 4> v, Config goal, unsigned int heuristic);
 //case 0: Heuristic 1 ; case 1: Heuristic 2 ; case 2: Heuristic 1 + Heuristic 2
 void calcPathCostASTAR(array<Node*, 4> v, Config goal,unsigned int heuristic){
     switch (heuristic) {
-        case 0:  
-                for(unsigned int i = 0; i<4 && v[i]!=NULL ; i++){
-                    v[i]->setPathCost(v[i]->getDepth() + calcH1(v[i], goal));}
-                break;
+        case 0:
+            for(unsigned int i = 0; i<4 && v[i]!=NULL; i++)
+                v[i]->setPathCost(v[i]->getDepth() + calcH1(v[i], goal));
+            break;
         case 1:
-                for(unsigned int i = 0; i<4 && v[i]!=NULL ; i++){
-                    v[i]->setPathCost(v[i]->getDepth() + calcH2(v[i], goal));}
-                break;
+            for(unsigned int i = 0; i<4 && v[i]!=NULL; i++)
+                v[i]->setPathCost(v[i]->getDepth() + calcH2(v[i], goal));
+            break;
         case 2:
-                for(unsigned int i = 0; i<4 && v[i]!=NULL ; i++){
-                    v[i]->setPathCost(v[i]->getDepth() + calcH1(v[i], goal) + calcH2(v[i],goal));}
-                break;
+            for(unsigned int i = 0; i<4 && v[i]!=NULL; i++)
+                v[i]->setPathCost(v[i]->getDepth() + calcH1(v[i], goal) + calcH2(v[i],goal));
+            break;
+        default:
+            cout << "Erro! Heurística não reconhecida" << endl;
     }
 }
 
 void calcPathCostGREEDY(array<Node*, 4> v, Config goal,unsigned int heuristic){
     switch (heuristic) {
-        case 0:  
-                for(unsigned int i = 0; i<4 && v[i]!=NULL ; i++){
-                    v[i]->setPathCost(calcH1(v[i], goal));}
-                break;
+        case 0:
+            for(unsigned int i = 0; i<4 && v[i]!=NULL; i++)
+                v[i]->setPathCost(calcH1(v[i], goal));
+            break;
         case 1:
-                for(unsigned int i = 0; i<4 && v[i]!=NULL ; i++){
-                    v[i]->setPathCost(calcH2(v[i], goal));}
-                break;
+            for(unsigned int i = 0; i<4 && v[i]!=NULL; i++)
+                v[i]->setPathCost(calcH2(v[i], goal));
+            break;
         case 2:
-                for(unsigned int i = 0; i<4 && v[i]!=NULL ; i++){
-                    v[i]->setPathCost(calcH1(v[i], goal) + calcH2(v[i],goal));}
-                break;
+            for(unsigned int i = 0; i<4 && v[i]!=NULL; i++)
+                v[i]->setPathCost(calcH1(v[i], goal) + calcH2(v[i],goal));
+            break;
+        default:
+            cout << "Erro! Heurística não reconhecida" << endl;
     }
 }
 
 //Heuristic 1: Number of misplaced tiles
 int calcH1(Node *actual, Config goal){
     int misplaced = 0;
-    for(unsigned int i = 0 ; i < 4 ; i++){
-        for(unsigned int j = 0 ; j < 4 ; j++){
+    for(unsigned int i = 0; i < 4; i++){
+        for(unsigned int j = 0; j < 4; j++){
             if(actual->getConfig().getMatrix()[i][j] != goal.getMatrix()[i][j])
                 misplaced++;
         }
@@ -74,8 +77,8 @@ int calcH1(Node *actual, Config goal){
 int calcH2(Node *actual, Config goal){
     int count = 0;
     int place = 0;
-    for(unsigned int i = 0 ; i < 4 ; i++){   //rows
-        for(unsigned int j = 0 ; j < 4 ; j++){ /*cols*/
+    for(unsigned int i = 0; i < 4; i++){   //rows
+        for(unsigned int j = 0; j < 4; j++){ /*cols*/
             int value = actual->getConfig().getMatrix()[i][j];
             array<int, 2> final = getColRowFinal(goal, value);    //Obtains the Column and Row of the correct spot for the tile [0]:row ; [1]: col
             place++;
@@ -89,7 +92,7 @@ int calcH2(Node *actual, Config goal){
 //Auxiliary function to heuristic 2: Gets the position of the column and row on their correct place
 array<int, 2> getColRowFinal(Config goal, int value){
     array<int, 2> final;
-    for(unsigned int i = 0; i < 4 ; i++){
+    for(unsigned int i = 0; i < 4; i++){
         for(unsigned int j = 0; j < 4; j++){
             if(goal.getMatrix()[i][j] == value){
                 final[0] = i;

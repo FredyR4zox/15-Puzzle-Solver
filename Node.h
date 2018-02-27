@@ -6,8 +6,6 @@ and a pathCost to ....................*/
 
 #include <iostream>
 #include <array>
-#include <string>
-#include <algorithm>
 #include <unordered_set>
 
 #include "Config.h"
@@ -21,7 +19,7 @@ class Node{
 private:
     Config cfg;
     Node *parent;
-    char move;  //Start: 'a'; Up: 'u'; Down: 'd'; Left: 'l'; Right: 'r'
+    char move;  //Start: 's'; Up: 'u'; Down: 'd'; Left: 'l'; Right: 'r'
     unsigned int depth;
     unsigned int pathCost;
     array<Node*, 4> children;
@@ -53,7 +51,7 @@ public:
 Node::Node(){
     cfg = Config();
     parent = NULL;
-    move = 'a';
+    move = 's';
     depth = 0;
     pathCost = 0;
     for(unsigned int i=0; i<4; i++)
@@ -63,7 +61,7 @@ Node::Node(){
 Node::Node(const array<int, 16>& arr){
     cfg = Config(arr);
     parent = NULL;
-    move = 'a';
+    move = 's';
     depth = 0;
     pathCost = 0;
     for(unsigned int i=0; i<4; i++)
@@ -73,7 +71,7 @@ Node::Node(const array<int, 16>& arr){
 Node::Node(const Config &cfg_){
     cfg = cfg_;
     parent = NULL;
-    move = 'a';
+    move = 's';
     depth = 0;
     pathCost = 0;
     for(unsigned int i=0; i<4; i++)
@@ -166,12 +164,27 @@ array<Node*, 4> Node::makeDescendants(unordered_set<Config>& hashSet){
 //When the solution is found, print what moves were made
 string Node::makePath(){
     string path = "";
-    path += move;
-    Node *node = parent;
+    Node *node = this;
 
     while(node != NULL){
         char c = node->getMove();
-        path+= string(" >- ") + c;
+        switch(c){
+            case 's':
+                path += "oicinI";
+                break;
+            case 'u':
+                path += "amic >- ";
+                break;
+            case 'd':
+                path += "oxiab >- ";
+                break;
+            case 'l':
+                path += "adreuqse >- ";
+                break;
+            case 'r':
+                path += "atierid >- ";
+                break;
+        }
         node = node->getParent();
     }
 

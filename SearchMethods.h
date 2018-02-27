@@ -4,31 +4,34 @@
 #include <array>
 #include <queue>
 #include <stack>
-#include <limits>
-#include <string>
-#include <cmath>
-#include <algorithm>
 #include <unordered_set>
 
 #include "Heuristics.h"
 
 using namespace std;
 
+
+//Global function declarations
+unsigned int generatedNodes;
+unsigned int visitedNodes;
+
+
 //Prototype declarations
 unsigned int inversions(Config &initialConfig);
 bool solutionExists(Config &initialConfig, Config &finalConfig);
 
-string GENERAL_SEARCH_DFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int& generatedNodes);
-string GENERAL_SEARCH_BFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int& generatedNodes);
-string GENERAL_SEARCH_GREEDY(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int heuristicsFlag, unsigned int& generatedNodes);
-string GENERAL_SEARCH_ASTAR(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int heuristicsFlag, unsigned int& generatedNodes);
+string GENERAL_SEARCH_DFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth);
+string GENERAL_SEARCH_BFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth);
+string GENERAL_SEARCH_GREEDY(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int heuristicsFlag);
+string GENERAL_SEARCH_ASTAR(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int heuristicsFlag);
 
-string DFS(Config &initialConfig, Config &finalConfig);
-string LDFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth);
-string IDFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth);
-string BFS(Config &initialConfig, Config &finalConfig);
-string ASTAR(Config &initialConfig, Config &finalConfig, unsigned int heuristicsFlag);
-string GREEDY(Config &initialConfig, Config &finalConfig, unsigned int heuristicsFlag);
+void DFS(Config &initialConfig, Config &finalConfig);
+void LDFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth);
+void IDFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth);
+void BFS(Config &initialConfig, Config &finalConfig);
+void ASTAR(Config &initialConfig, Config &finalConfig, unsigned int heuristicsFlag);
+void GREEDY(Config &initialConfig, Config &finalConfig, unsigned int heuristicsFlag);
+
 //Function to check if we can reach a solution from the initial configuration
 unsigned int inversions(Config &initialConfig){
     unsigned int n=0;
@@ -58,19 +61,11 @@ bool solutionExists(Config &initialConfig, Config &finalConfig){
 }
 
 //General Search Algorithm to search for a solution
-string GENERAL_SEARCH_DFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int& generatedNodes){
+string GENERAL_SEARCH_DFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth){
     Node *initialNode = new Node(initialConfig);
     Node *solution = new Node(finalConfig);
 
-    generatedNodes+=2;
-
-    if(!solutionExists(initialConfig, finalConfig)){
-        delete initialNode;
-        delete solution;
-        return "Solution not found";    //There is no solution
-    }
-
-    stack<Node*> q;  //Double-Ended QUEue to be able to insert in the front or the back, depending on the pos (or function iterator)
+    stack<Node*> q;
     q.push(initialNode);
 
     unordered_set<Config> hashSet;
@@ -79,6 +74,8 @@ string GENERAL_SEARCH_DFS(Config &initialConfig, Config &finalConfig, unsigned i
         Node *removed = q.top();
         q.pop();
 
+        visitedNodes++;
+
         if(removed->getConfig() == solution->getConfig()){
             string str = removed->makePath();
             delete initialNode;
@@ -102,33 +99,27 @@ string GENERAL_SEARCH_DFS(Config &initialConfig, Config &finalConfig, unsigned i
 }
 
 //General Search Algorithm to search for a solution
-string GENERAL_SEARCH_BFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth,unsigned int& generatedNodes){
+string GENERAL_SEARCH_BFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth){
     Node *initialNode = new Node(initialConfig);
     Node *solution = new Node(finalConfig);
-
-    generatedNodes+=2;
-
-    if(!solutionExists(initialConfig, finalConfig)){
-        delete initialNode;
-        delete solution;
-        return "Solution not found";    //There is no solution
-    }
 
     queue<Node*> q;
     q.push(initialNode);
 
     unordered_set<Config> hashSet;
 
-    unsigned depth = 0;
+    unsigned int depth = 0;
 
     while(!q.empty()){
         Node *removed = q.front();
         q.pop();
 
         if(removed->getDepth() > depth){
-            cout << "Altura: " << removed->getDepth() << "\tNós gerados: " << generatedNodes << endl;
+            cout << "Altura: " << removed->getDepth() << "\tTotal de nós gerados: " << generatedNodes << " \tTotal de nós visitados: " << visitedNodes << endl;
             depth = removed->getDepth();
         }
+
+        visitedNodes++;
 
         if(removed->getConfig() == solution->getConfig()){
             string str = removed->makePath();
@@ -153,17 +144,9 @@ string GENERAL_SEARCH_BFS(Config &initialConfig, Config &finalConfig, unsigned i
 }
 
 //General Search Algorithm to search for a solution
-string GENERAL_SEARCH_ASTAR(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int heuristicsFlag, unsigned int& generatedNodes){
+string GENERAL_SEARCH_ASTAR(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int heuristicsFlag){
     Node *initialNode = new Node(initialConfig);
     Node *solution = new Node(finalConfig);
-
-    generatedNodes+=2;
-
-    if(!solutionExists(initialConfig, finalConfig)){
-        delete initialNode;
-        delete solution;
-        return "Solution not found";    //There is no solution
-    }
 
     priority_queue<Node*, vector<Node*>, compareNodes> q;
     q.push(initialNode);
@@ -173,6 +156,8 @@ string GENERAL_SEARCH_ASTAR(Config &initialConfig, Config &finalConfig, unsigned
     while(!q.empty()){
         Node *removed = q.top();
         q.pop();
+
+        visitedNodes++;
 
         if(removed->getConfig() == solution->getConfig()){
             string str = removed->makePath();
@@ -199,17 +184,9 @@ string GENERAL_SEARCH_ASTAR(Config &initialConfig, Config &finalConfig, unsigned
 
 
 //General Search Algorithm to search for a solution
-string GENERAL_SEARCH_GREEDY(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int heuristicsFlag, unsigned int& generatedNodes){
+string GENERAL_SEARCH_GREEDY(Config &initialConfig, Config &finalConfig, unsigned int maxDepth, unsigned int heuristicsFlag){
     Node *initialNode = new Node(initialConfig);
     Node *solution = new Node(finalConfig);
-
-    generatedNodes+=2;
-
-    if(!solutionExists(initialConfig, finalConfig)){
-        delete initialNode;
-        delete solution;
-        return "Solution not found";    //There is no solution
-    }
 
     priority_queue<Node*, vector<Node*>, compareNodes> q;
     q.push(initialNode);
@@ -219,6 +196,8 @@ string GENERAL_SEARCH_GREEDY(Config &initialConfig, Config &finalConfig, unsigne
     while(!q.empty()){
         Node *removed = q.top();
         q.pop();
+
+        visitedNodes++;
 
         if(removed->getConfig() == solution->getConfig()){
             string str = removed->makePath();
@@ -244,48 +223,113 @@ string GENERAL_SEARCH_GREEDY(Config &initialConfig, Config &finalConfig, unsigne
 }
 
 
-string DFS(Config &initialConfig, Config &finalConfig){ /*Depth first search function*/
-    unsigned int generatedNodes = 0;
-    string str = GENERAL_SEARCH_DFS(initialConfig, finalConfig, 80, generatedNodes);
-    cout << "Nós gerados: " << generatedNodes << endl;
-    return str;
-}
-
-string LDFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth){ /*Limited Breadth first search function*/
-    unsigned int generatedNodes = 0;
-    string str = GENERAL_SEARCH_DFS(initialConfig, finalConfig, maxDepth, generatedNodes);
-    cout << "Nós gerados: " << generatedNodes << endl;
-    return str;
-}
-
-string IDFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth){  /*Iterative Depth first search function*/
-    for(unsigned int i=1; i<=maxDepth; i++){
-        unsigned int generatedNodes = 0;
-        string str = GENERAL_SEARCH_DFS(initialConfig, finalConfig, i, generatedNodes);
-        cout << "Altura: " << i << "   \tNós gerados: " << generatedNodes << endl;
-        if(str != "Solution not found")
-            return str;
+void DFS(Config &initialConfig, Config &finalConfig){   /*Depth first search function*/
+    if(!solutionExists(initialConfig, finalConfig)){
+        cout << "Não é possivel chegar à configuração final a partir da configuração inicial" << endl;    //There is no solution
+        return;
     }
 
-    return "Solution not found";
+    generatedNodes = visitedNodes = 0;
+    string str = GENERAL_SEARCH_DFS(initialConfig, finalConfig, 80);
+    
+    if(str != "Solution not found")
+        cout << "Movimentos: " << str << endl;
+    else
+        cout << "Solução não encontrada" << endl;
+    
+    cout << "Nós gerados: " << generatedNodes << endl;
+    cout << "Nós visitados: " << visitedNodes << endl;
 }
 
-string BFS(Config &initialConfig, Config &finalConfig){ /*Breadth first search function*/
-    unsigned int generatedNodes = 0;
-    string str = GENERAL_SEARCH_BFS(initialConfig, finalConfig, 80, generatedNodes);
+void LDFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth){ /*Limited Breadth first search function*/
+    if(!solutionExists(initialConfig, finalConfig)){
+        cout << "Não é possivel chegar à configuração final a partir da configuração inicial" << endl;    //There is no solution
+        return;
+    }
+
+    generatedNodes = visitedNodes = 0;
+    string str = GENERAL_SEARCH_DFS(initialConfig, finalConfig, maxDepth);
+    
+    if(str != "Solution not found")
+        cout << "Movimentos: " << str << endl;
+    else
+        cout << "Solução não encontrada" << endl;
+    
     cout << "Nós gerados: " << generatedNodes << endl;
-    return str;
-}
-string ASTAR(Config &initialConfig, Config &finalConfig, unsigned int heuristicsFlag){   /*A* search function calls overloaded 2nd version of BFS*/
-    unsigned int generatedNodes = 0;
-    string str = GENERAL_SEARCH_ASTAR(initialConfig, finalConfig, 80, heuristicsFlag, generatedNodes);
-    cout << "Nós gerados: " << generatedNodes << endl;
-    return str;
+    cout << "Nós visitados: " << visitedNodes << endl;
 }
 
-string GREEDY(Config &initialConfig, Config &finalConfig, unsigned int heuristicsFlag){    /*Greedy with Heuristics search function*/
-    unsigned int generatedNodes = 0;
-    string str = GENERAL_SEARCH_GREEDY(initialConfig, finalConfig, 80, heuristicsFlag, generatedNodes);
+void IDFS(Config &initialConfig, Config &finalConfig, unsigned int maxDepth){  /*Iterative Depth first search function*/
+    if(!solutionExists(initialConfig, finalConfig)){
+        cout << "Não é possivel chegar à configuração final a partir da configuração inicial" << endl;    //There is no solution
+        return;
+    }
+
+    for(unsigned int i=1; i<=maxDepth; i++){
+        generatedNodes = visitedNodes = 0;
+        string str = GENERAL_SEARCH_DFS(initialConfig, finalConfig, i);
+        
+        cout << "Altura: " << i << "\tNós gerados: " << generatedNodes << "  \tNós visitados: " << visitedNodes << endl;
+        
+        if(str != "Solution not found"){
+            cout << "Movimentos: " << str << endl;
+            return;
+        }
+    }
+
+    cout << "Solução não encontrada" << endl;
+}
+
+void BFS(Config &initialConfig, Config &finalConfig){ /*Breadth first search function*/
+    if(!solutionExists(initialConfig, finalConfig)){
+        cout << "Não é possivel chegar à configuração final a partir da configuração inicial" << endl;    //There is no solution
+        return;
+    }
+
+    generatedNodes = visitedNodes = 0;
+    string str = GENERAL_SEARCH_BFS(initialConfig, finalConfig, 80);
+    
+    if(str != "Solution not found")
+        cout << "Movimentos: " << str << endl;
+    else
+        cout << "Solução não encontrada" << endl;
+    
     cout << "Nós gerados: " << generatedNodes << endl;
-    return str;
+    cout << "Nós visitados: " << visitedNodes << endl;
+}
+
+void ASTAR(Config &initialConfig, Config &finalConfig, unsigned int heuristicsFlag){   /*A* search function calls overloaded 2nd version of BFS*/
+    if(!solutionExists(initialConfig, finalConfig)){
+        cout << "Não é possivel chegar à configuração final a partir da configuração inicial" << endl;    //There is no solution
+        return;
+    }
+
+    generatedNodes = visitedNodes = 0;
+    string str = GENERAL_SEARCH_ASTAR(initialConfig, finalConfig, 80, heuristicsFlag);
+    
+    if(str != "Solution not found")
+        cout << "Movimentos: " << str << endl;
+    else
+        cout << "Solução não encontrada" << endl;
+    
+    cout << "Nós gerados: " << generatedNodes << endl;
+    cout << "Nós visitados: " << visitedNodes << endl;
+}
+
+void GREEDY(Config &initialConfig, Config &finalConfig, unsigned int heuristicsFlag){    /*Greedy with Heuristics search function*/
+    if(!solutionExists(initialConfig, finalConfig)){
+        cout << "Não é possivel chegar à configuração final a partir da configuração inicial" << endl;    //There is no solution
+        return;
+    }
+    
+    generatedNodes = visitedNodes = 0;
+    string str = GENERAL_SEARCH_GREEDY(initialConfig, finalConfig, 80, heuristicsFlag);
+    
+    if(str != "Solution not found")
+        cout << "Movimentos: " << str << endl;
+    else
+        cout << "Solução não encontrada" << endl;
+    
+    cout << "Nós gerados: " << generatedNodes << endl;
+    cout << "Nós visitados: " << visitedNodes << endl;
 }
