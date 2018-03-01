@@ -27,8 +27,8 @@ private:
 public:
     Node();
     Node(const array<int, 16>& arr);
-    Node(const Config &cfg_);
-    Node(Node &node, const char &move);
+    Node(const Config& cfg_);
+    Node(Node& node, const char& move);
     ~Node();
 
     void setPathCost(const unsigned int cost);
@@ -41,7 +41,7 @@ public:
     inline array<Node*, 4> getChildren() const;
 
     void display();
-    array<Node*, 4> makeDescendants(unordered_set<Config>& hashSet);
+    array<Node*, 4> makeDescendants(unordered_set<Config>* hashSet);
     string makePath();
 };
 
@@ -68,7 +68,7 @@ Node::Node(const array<int, 16>& arr){
         children[i] = NULL;
 }
 
-Node::Node(const Config &cfg_){
+Node::Node(const Config& cfg_){
     cfg = cfg_;
     parent = NULL;
     move = 's';
@@ -78,20 +78,15 @@ Node::Node(const Config &cfg_){
         children[i] = NULL;
 }
 
-Node::Node(Node &node, const char &mv){
+Node::Node(Node& node, const char& mv){
     cfg = node.getConfig();
     cfg.move(mv);
     parent = &node;
     move = mv;
     depth = node.getDepth() + 1;
-    pathCost = node.getPathCost() + 1;
-
-    for(unsigned int i=0; i<4; i++){
-        if(children[i]==NULL){
-            children[i] = this;
-            break;
-        }
-    }
+    pathCost = 0;
+    for(unsigned int i=0; i<4; i++)
+        children[i] = NULL;
 }
 
 Node::~Node(){
@@ -145,15 +140,25 @@ void Node::display(){
 //i.e.: move up, down, left and right
 //It will generate 4 Nodes at max (node not on limit of rows or columns)
 //And 2 at min (Node in corner)
-array<Node*, 4> Node::makeDescendants(unordered_set<Config>& hashSet){
+array<Node*, 4> Node::makeDescendants(unordered_set<Config>* hashSet){
     array<char, 4> moves = cfg.possibleMoves();
     array<Node*, 4> l = {};
     unsigned int index = 0;
 
     for(unsigned int i=0; i<4 && moves[i]!=0; i++){
         Node *node = new Node(*this, moves[i]);
-        if(hashSet.insert(node->getConfig()).second == false)
-            continue;
+        if(hashSet != NULL){
+            if(hashSet->insert(node->getConfig()).second == false){
+                delete node;
+                continue;
+            }
+        }
+        for(unsigned int i=0; i<4; i++){
+            if(this->children[i]==NULL){
+                this->children[i] = node;
+                break;
+            }
+        }
         l[index] = node;
         index++;
     }

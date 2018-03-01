@@ -7,12 +7,13 @@
 using namespace std;
 
 int main(int argc, char const *argv[]){
-    if(argc < 2 || (!strcmp(argv[1], "IDFS") && argc!=3) || (!strcmp(argv[1],"ASTAR") && argc !=3) || (!strcmp(argv[1],"GULOSA") && argc != 3) ){
+    if(argc < 2 || (!strcmp(argv[1], "IDFS") && argc!=3) || (!strcmp(argv[1], "LDFS") && argc!=3) || (!strcmp(argv[1],"ASTAR") && argc !=3) || (!strcmp(argv[1],"GULOSA") && argc != 3) ){
         cout << "Uso: " << argv[0] << " [Método de busca] [Opções de busca]" << endl;
         cout << "Tipos de busca:" << endl;
-        cout << "   BFS -> efetua busca em largura;" << endl;
-        cout << "   IDFS [Profundidade Máxima] -> efetua busca em profundidade, onde profundidade máxima é o seu limite;" << endl;
         cout << "   DFS -> efetua busca em profundidade;" << endl;
+        cout << "   LDFS [Profundidade Máxima] -> efetua busca em profundidade, onde profundidade máxima é o seu limite;" << endl;
+        cout << "   IDFS [Profundidade Máxima] -> efetua busca em profundidade iterativamente, onde profundidade máxima é o seu limite;" << endl;
+        cout << "   BFS -> efetua busca em largura;" << endl;
         cout << "   ASTAR [Heurística] -> efetua busca A*;" << endl;
         cout << "   GULOSA [Heurística] -> efetua busca gulosa;" << endl;
         cout << "Tipos de Heurística (ASTAR e GULOSA):" << endl;
@@ -51,8 +52,13 @@ int main(int argc, char const *argv[]){
         clock1 = clock();
         DFS(initialConfig, finalConfig);
         clock2 = clock();
-     }
-     else if(!strcmp(argv[1], "IDFS")){
+    }
+    else if(!strcmp(argv[1], "LDFS")){
+        clock1 = clock();
+        LDFS(initialConfig, finalConfig, atoi(argv[2]));
+        clock2 = clock();
+    }
+    else if(!strcmp(argv[1], "IDFS")){
         clock1 = clock();
         IDFS(initialConfig, finalConfig, atoi(argv[2]));
         clock2 = clock();
