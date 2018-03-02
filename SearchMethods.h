@@ -11,7 +11,7 @@
 using namespace std;
 
 //Change value to change the maximum depth of DFS, BFS, ASTAR and GREEDY
-#define MAX_DEPTH 15
+#define MAX_DEPTH 80
 
 //Global function declarations
 unsigned int generatedNodes;
