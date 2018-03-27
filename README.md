@@ -28,3 +28,9 @@ The usage of this project is intuitive. It's instructions appear when the progra
 * SearchMethods.h - Search functions to search for the steps to take to the solution
 * Heuristics.h - Functions to calculate the cost of the Node's
 * test's - Initial and final configurations of boards to test the program
+
+
+### Change the maximum depth
+Máximo de profundidade:
+The maximum depth that the search functions DFS, BFS, A* and Greedy have is 80 by default.
+To change this value go to the file "SearchMethods.h" and change the value of the constant MAX_DEPTH on the beginning of the file.
