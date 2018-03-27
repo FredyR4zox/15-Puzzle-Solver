@@ -7,39 +7,39 @@
 using namespace std;
 
 int main(int argc, char const *argv[]){
-    if(argc < 2 || (!strcmp(argv[1], "IDFS") && argc!=3) || (!strcmp(argv[1], "LDFS") && argc!=3) || (!strcmp(argv[1],"ASTAR") && argc !=3) || (!strcmp(argv[1],"GULOSA") && argc != 3) ){
-        cout << "Uso: " << argv[0] << " [Método de busca] [Opções de busca]" << endl;
-        cout << "Tipos de busca:" << endl;
-        cout << "   DFS -> efetua busca em profundidade;" << endl;
-        cout << "   LDFS [Profundidade Máxima] -> efetua busca em profundidade, onde profundidade máxima é o seu limite;" << endl;
-        cout << "   IDFS [Profundidade Máxima] -> efetua busca em profundidade iterativamente, onde profundidade máxima é o seu limite;" << endl;
-        cout << "   BFS -> efetua busca em largura;" << endl;
-        cout << "   ASTAR [Heurística] -> efetua busca A*;" << endl;
-        cout << "   GULOSA [Heurística] -> efetua busca gulosa;" << endl;
-        cout << "Tipos de Heurística (ASTAR e GULOSA):" << endl;
-        cout << "   0: Nº de peças fora da posição final;" << endl;
-        cout << "   1: Manhattan Distance (Somatório das distâncias de cada peça da sua posição final);" << endl;
-        cout << "   2: Soma das duas Heurísticas;" << endl;
+    if(argc < 2 || (!strcmp(argv[1], "IDFS") && argc!=3) || (!strcmp(argv[1], "LDFS") && argc!=3) || (!strcmp(argv[1],"ASTAR") && argc !=3) || (!strcmp(argv[1],"GREEDY") && argc != 3) ){
+        cout << "Usage: " << argv[0] << " [Search method] [Search options]" << endl;
+        cout << "Search methods:" << endl;
+        cout << "   DFS -> use Depth First Search;" << endl;
+        cout << "   LDFS [Maximum Depth] -> use Limited Depth First Search, where maximum depth is the depth limit;" << endl;
+        cout << "   IDFS [Maximum Depth] -> use Iteractive Depth First Search, where maximum depth is the depth limit;" << endl;
+        cout << "   BFS -> use Breadth First Search;" << endl;
+        cout << "   ASTAR [Heuristic] -> use A* Search;" << endl;
+        cout << "   GREEDY [Heuristic] -> use Greedy Search;" << endl;
+        cout << "Types of Heuristic (for ASTAR and GREEDY):" << endl;
+        cout << "   0: Nº of pieces out of their final position;" << endl;
+        cout << "   1: Manhattan Distance (Sum of the distance of all pieces from their final position);" << endl;
+        cout << "   2: Sum of the two previous heuristics;" << endl;
         return 1;
     }
 
     array<int, 16> startVec;
-    cout << "Insira o tabuleiro inicial: ";
+    cout << "Insert the initial board: ";
     for(unsigned int i=0; i<16; i++)
         cin >> startVec[i];
 
     array<int, 16> finalVec;
-    cout << "Insira o tabuleiro final: ";
+    cout << "Insert the final board: ";
     for(unsigned int i=0; i<16; i++)
         cin >> finalVec[i];
 
 
     Config initialConfig = Config(startVec);
-    cout << endl << "Tabuleiro Inicial: " << endl;
+    cout << endl << "Initial Board: " << endl;
     initialConfig.display();
 
     Config finalConfig = Config(finalVec);
-    cout << endl << "Tabuleiro Final: " << endl;
+    cout << endl << "Final Board: " << endl;
     finalConfig.display();
 
     cout << endl;
@@ -73,15 +73,15 @@ int main(int argc, char const *argv[]){
         ASTAR(initialConfig, finalConfig, atoi(argv[2]));
         clock2 = clock();
     }
-    else if (!strcmp(argv[1], "GULOSA")){
+    else if (!strcmp(argv[1], "GREEDY")){
         clock1 = clock();
         GREEDY(initialConfig, finalConfig, atoi(argv[2]));
         clock2 = clock();
     }
     else
-        cout << "Tipo de busca não existente" << endl;
+        cout << "Search method not found" << endl;
 
-    cout << "Tempo de execução: " << ((float)clock2-clock1)/CLOCKS_PER_SEC << " segundos" << endl;
+    cout << "Execution time: " << ((float)clock2-clock1)/CLOCKS_PER_SEC << " seconds" << endl;
 
     return 0;
 }
