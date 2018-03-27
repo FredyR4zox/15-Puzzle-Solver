@@ -80,7 +80,7 @@ string GENERAL_SEARCH_DFS(Config& initialConfig, Config& finalConfig, unsigned i
         visitedNodes++;
 
         if(removed->getConfig() == finalConfig){
-            cout << "Solução encontrada na profundidade: " << removed->getDepth() << endl;
+            cout << "Solution found on depth: " << removed->getDepth() << endl;
             string str = removed->makePath();
             delete initialNode;
             return str;
@@ -115,7 +115,7 @@ string GENERAL_SEARCH_LDFS(Config& initialConfig, Config& finalConfig, unsigned 
         visitedNodes++;
 
         if(removed->getConfig() == finalConfig){
-            cout << "Solução encontrada na profundidade: " << removed->getDepth() << endl;
+            cout << "Solution found on depth: " << removed->getDepth() << endl;
             string str = removed->makePath();
             delete initialNode;
             return str;
@@ -152,14 +152,14 @@ string GENERAL_SEARCH_BFS(Config& initialConfig, Config& finalConfig, unsigned i
         q.pop();
 
         if(removed->getDepth() > depth){
-            cout << "Altura: " << removed->getDepth() << "\tTotal de nós gerados: " << generatedNodes << " \tTotal de nós visitados: " << visitedNodes << endl;
+            cout << "Depth: " << removed->getDepth() << "\tTotal of generated nodes: " << generatedNodes << " \tTotal of visited nodes: " << visitedNodes << endl;
             depth = removed->getDepth();
         }
 
         visitedNodes++;
 
         if(removed->getConfig() == finalConfig){
-            cout << endl << "Solução encontrada na profundidade: " << removed->getDepth() << endl;
+            cout << endl << "Solution found on depth: " << removed->getDepth() << endl;
             string str = removed->makePath();
             delete initialNode;
             return str;
@@ -194,7 +194,7 @@ string GENERAL_SEARCH_ASTAR(Config& initialConfig, Config& finalConfig, unsigned
         visitedNodes++;
 
         if(removed->getConfig() == finalConfig){
-            cout << "Solução encontrada na profundidade: " << removed->getDepth() << endl;
+            cout << "Solution found on depth: " << removed->getDepth() << endl;
             string str = removed->makePath();
             delete initialNode;
             return str;
@@ -233,7 +233,7 @@ string GENERAL_SEARCH_GREEDY(Config& initialConfig, Config& finalConfig, unsigne
         visitedNodes++;
 
         if(removed->getConfig() == finalConfig){
-            cout << "Solução encontrada na profundidade: " << removed->getDepth() << endl;
+            cout << "Solution found on depth: " << removed->getDepth() << endl;
             string str = removed->makePath();
             delete initialNode;
             return str;
@@ -257,7 +257,7 @@ string GENERAL_SEARCH_GREEDY(Config& initialConfig, Config& finalConfig, unsigne
 
 void DFS(Config& initialConfig, Config& finalConfig){   /*Depth first search function*/
     if(!solutionExists(initialConfig, finalConfig)){
-        cout << "Não é possivel chegar à configuração final a partir da configuração inicial" << endl << endl;    //There is no solution
+        cout << "It's not possible to reach to the final configuration starting from the initial configuration" << endl << endl;    //There is no solution
         return;
     }
 
@@ -265,18 +265,18 @@ void DFS(Config& initialConfig, Config& finalConfig){   /*Depth first search fun
     string str = GENERAL_SEARCH_DFS(initialConfig, finalConfig, MAX_DEPTH);
     
     if(str != "Solution not found")
-        cout << "Movimentos: " << str << endl << endl;
+        cout << "Movements: " << str << endl << endl;
     else
-        cout << "Solução não encontrada" << endl << endl;
+        cout << "Solution not found" << endl << endl;
     
-    cout << "Nós gerados: " << generatedNodes << endl;
-    cout << "Nós visitados: " << visitedNodes << endl;
-    cout << "Máximo de memória gasta em nós: " << (generatedNodes*sizeof(Node))/1024 << " KB" << endl << endl;
+    cout << "Generated Nodes: " << generatedNodes << endl;
+    cout << "Visited Nodes: " << visitedNodes << endl;
+    cout << "Maximum of memory spent on nodes: " << (generatedNodes*sizeof(Node))/1024 << " KB" << endl << endl;
 }
 
 void LDFS(Config& initialConfig, Config& finalConfig, unsigned int maxDepth){ /*Limited Breadth first search function*/
     if(!solutionExists(initialConfig, finalConfig)){
-        cout << "Não é possivel chegar à configuração final a partir da configuração inicial" << endl << endl;    //There is no solution
+        cout << "It's not possible to reach to the final configuration starting from the initial configuration" << endl << endl;    //There is no solution
         return;
     }
 
@@ -284,18 +284,18 @@ void LDFS(Config& initialConfig, Config& finalConfig, unsigned int maxDepth){ /*
     string str = GENERAL_SEARCH_LDFS(initialConfig, finalConfig, maxDepth);
     
     if(str != "Solution not found")
-        cout << "Movimentos: " << str << endl << endl;
+        cout << "Movements: " << str << endl << endl;
     else
-        cout << "Solução não encontrada" << endl << endl;
+        cout << "Solution not found" << endl << endl;
     
-    cout << "Nós gerados: " << generatedNodes << endl;
-    cout << "Nós visitados: " << visitedNodes << endl;
-    cout << "Máximo de memória gasta em nós: " << (generatedNodes*sizeof(Node))/1024 << " KB" << endl << endl;
+    cout << "Generated Nodes: " << generatedNodes << endl;
+    cout << "Visited Nodes: " << visitedNodes << endl;
+    cout << "Maximum of memory spent on nodes: " << (generatedNodes*sizeof(Node))/1024 << " KB" << endl << endl;
 }
 
 void IDFS(Config& initialConfig, Config& finalConfig, unsigned int maxDepth){  /*Iterative Depth first search function*/
     if(!solutionExists(initialConfig, finalConfig)){
-        cout << "Não é possivel chegar à configuração final a partir da configuração inicial" << endl << endl;    //There is no solution
+        cout << "It's not possible to reach to the final configuration starting from the initial configuration" << endl << endl;    //There is no solution
         return;
     }
 
@@ -303,21 +303,21 @@ void IDFS(Config& initialConfig, Config& finalConfig, unsigned int maxDepth){  /
         generatedNodes = visitedNodes = 0;
         string str = GENERAL_SEARCH_LDFS(initialConfig, finalConfig, i);
         
-        cout << "Altura: " << i << "\tNós gerados: " << generatedNodes << "  \tNós visitados: " << visitedNodes << endl;
-        cout << "Máximo de memória gasta em nós: " << (generatedNodes*sizeof(Node))/1024 << " KB" << endl << endl;
+        cout << "Depth: " << i << "\tGenerated nodes: " << generatedNodes << "  \tVisited nodes: " << visitedNodes << endl;
+        cout << "Maximum of memory spent on nodes: " << (generatedNodes*sizeof(Node))/1024 << " KB" << endl << endl;
         
         if(str != "Solution not found"){
-            cout << "Movimentos: " << str << endl <<  endl;
+            cout << "Movements: " << str << endl <<  endl;
             return;
         }
     }
 
-    cout << "Solução não encontrada" << endl << endl;
+    cout << "Solution not found" << endl << endl;
 }
 
 void BFS(Config& initialConfig, Config& finalConfig){ /*Breadth first search function*/
     if(!solutionExists(initialConfig, finalConfig)){
-        cout << "Não é possivel chegar à configuração final a partir da configuração inicial" << endl << endl;    //There is no solution
+        cout << "It's not possible to reach to the final configuration starting from the initial configuration" << endl << endl;    //There is no solution
         return;
     }
 
@@ -325,18 +325,18 @@ void BFS(Config& initialConfig, Config& finalConfig){ /*Breadth first search fun
     string str = GENERAL_SEARCH_BFS(initialConfig, finalConfig, MAX_DEPTH);
     
     if(str != "Solution not found")
-        cout << "Movimentos: " << str << endl << endl;
+        cout << "Movements: " << str << endl << endl;
     else
-        cout << "Solução não encontrada" << endl << endl;
+        cout << "Solution not found" << endl << endl;
     
-    cout << "Nós gerados: " << generatedNodes << endl;
-    cout << "Nós visitados: " << visitedNodes << endl;
-    cout << "Máximo de memória gasta em nós: " << (generatedNodes*sizeof(Node))/1024 << " KB" << endl << endl;
+    cout << "Generated Nodes: " << generatedNodes << endl;
+    cout << "Visited Nodes: " << visitedNodes << endl;
+    cout << "Maximum of memory spent on nodes: " << (generatedNodes*sizeof(Node))/1024 << " KB" << endl << endl;
 }
 
 void ASTAR(Config& initialConfig, Config& finalConfig, unsigned int heuristicsFlag){   /*A* search function calls overloaded 2nd version of BFS*/
     if(!solutionExists(initialConfig, finalConfig)){
-        cout << "Não é possivel chegar à configuração final a partir da configuração inicial" << endl << endl;    //There is no solution
+        cout << "It's not possible to reach to the final configuration starting from the initial configuration" << endl << endl;    //There is no solution
         return;
     }
 
@@ -344,18 +344,18 @@ void ASTAR(Config& initialConfig, Config& finalConfig, unsigned int heuristicsFl
     string str = GENERAL_SEARCH_ASTAR(initialConfig, finalConfig, MAX_DEPTH, heuristicsFlag);
     
     if(str != "Solution not found")
-        cout << "Movimentos: " << str << endl << endl;
+        cout << "Movements: " << str << endl << endl;
     else
-        cout << "Solução não encontrada" << endl << endl;
+        cout << "Solution not found" << endl << endl;
     
-    cout << "Nós gerados: " << generatedNodes << endl;
-    cout << "Nós visitados: " << visitedNodes << endl;
-    cout << "Máximo de memória gasta em nós: " << (generatedNodes*sizeof(Node))/1024 << " KB" << endl << endl;
+    cout << "Generated Nodes: " << generatedNodes << endl;
+    cout << "Visited Nodes: " << visitedNodes << endl;
+    cout << "Maximum of memory spent on nodes: " << (generatedNodes*sizeof(Node))/1024 << " KB" << endl << endl;
 }
 
 void GREEDY(Config& initialConfig, Config& finalConfig, unsigned int heuristicsFlag){    /*Greedy with Heuristics search function*/
     if(!solutionExists(initialConfig, finalConfig)){
-        cout << "Não é possivel chegar à configuração final a partir da configuração inicial" << endl << endl;    //There is no solution
+        cout << "It's not possible to reach to the final configuration starting from the initial configuration" << endl << endl;    //There is no solution
         return;
     }
     
@@ -363,11 +363,11 @@ void GREEDY(Config& initialConfig, Config& finalConfig, unsigned int heuristicsF
     string str = GENERAL_SEARCH_GREEDY(initialConfig, finalConfig, MAX_DEPTH, heuristicsFlag);
     
     if(str != "Solution not found")
-        cout << "Movimentos: " << str << endl << endl;
+        cout << "Movements: " << str << endl << endl;
     else
-        cout << "Solução não encontrada" << endl << endl;
+        cout << "Solution not found" << endl << endl;
     
-    cout << "Nós gerados: " << generatedNodes << endl;
-    cout << "Nós visitados: " << visitedNodes << endl;
-    cout << "Máximo de memória gasta em nós: " << (generatedNodes*sizeof(Node))/1024 << " KB" << endl << endl;
+    cout << "Generated Nodes: " << generatedNodes << endl;
+    cout << "Visited Nodes: " << visitedNodes << endl;
+    cout << "Maximum of memory spent on nodes: " << (generatedNodes*sizeof(Node))/1024 << " KB" << endl << endl;
 }
