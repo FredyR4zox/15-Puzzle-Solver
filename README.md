@@ -1,5 +1,5 @@
 # IA-Project-1
-First project of Artificial Inteligence, which consisted in developing a bot to solve the 15-puzzle using heuristic search.
+First project of the subject Artificial Inteligence, which consisted in developing a bot to solve the 15-puzzle using heuristic search.
 Our implementation was in C++.
 
 
@@ -31,6 +31,11 @@ The usage of this project is intuitive. It's instructions appear when the progra
 
 
 ### Change the maximum depth
-Máximo de profundidade:
 The maximum depth that the search functions DFS, BFS, A* and Greedy have is 80 by default.
 To change this value go to the file "SearchMethods.h" and change the value of the constant MAX_DEPTH on the beginning of the file.
+
+
+### Authors
+* Ana Rita Santos Lopes da Costa - up201605706
+* Frederico Emanuel Almeida Lopes - up201604674
+* João Lucas Faria de Pires - up201606617
