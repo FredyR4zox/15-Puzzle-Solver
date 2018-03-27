@@ -37,7 +37,7 @@ void calcPathCostASTAR(array<Node*, 4> v, Config goal,unsigned int heuristic){
                 v[i]->setPathCost(v[i]->getDepth() + calcH1(v[i], goal) + calcH2(v[i],goal));
             break;
         default:
-            cout << "Erro! Heurística não reconhecida" << endl;
+            cout << "Error! Heurístic not recognized" << endl;
     }
 }
 
@@ -56,7 +56,7 @@ void calcPathCostGREEDY(array<Node*, 4> v, Config goal,unsigned int heuristic){
                 v[i]->setPathCost(calcH1(v[i], goal) + calcH2(v[i],goal));
             break;
         default:
-            cout << "Erro! Heurística não reconhecida" << endl;
+            cout << "Error! Heurístic not recognized" << endl;
     }
 }
 
