@@ -7,7 +7,7 @@ Our implementation was in C++.
 * DFS - Depth First Search
 * LDFS - Limited Depth First Search
 * IDFS - Iteractive Depth First Search
-* BFS - Breath First Search
+* BFS - Breadth First Search
 * A* - A Star Search
 * Greedy - Greedy Search
 
