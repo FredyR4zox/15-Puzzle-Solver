@@ -27,4 +27,4 @@ The usage of this project is intuitive. It's instructions appear when the progra
 * Config.h 	- Implementation of the game board and functions to work with the board
 * SearchMethods.h - Search functions to search for the steps to take to the solution
 * Heuristics.h - Functions to calculate the cost of the Node's
-* test's - Inicial and final configurations of boards to test the program
+* test's - Initial and final configurations of boards to test the program
