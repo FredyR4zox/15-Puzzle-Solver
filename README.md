@@ -1,5 +1,5 @@
 # 15-Puzzle-Solver
-First project of the subject Artificial Inteligence, which consisted in developing a bot to solve the 15-puzzle using heuristic search.
+First project for the subject Artificial Inteligence, which consisted in developing a bot to solve the 15-puzzle using heuristic search.
 Our implementation was in C++.
 
 
@@ -22,12 +22,12 @@ The usage of this project is intuitive. It's instructions appear when the progra
 
 
 ### Files
-* main.cpp - Requests input and calls the search functions
-* Node.h - Implementation of the graph node's
-* Config.h 	- Implementation of the game board and functions to work with the board
-* SearchMethods.h - Search functions to search for the steps to take to the solution
-* Heuristics.h - Functions to calculate the cost of the Node's
-* test's - Initial and final configurations of boards to test the program
+* main.cpp - Requests input and calls the search functions.
+* Node.h - Implementation of the graph node's.
+* Config.h 	- Implementation of the game board and functions to work with the board.
+* SearchMethods.h - Search functions to search for the steps to take to the solution.
+* Heuristics.h - Functions to calculate the cost of the Node's.
+* test* - Initial and final configurations of boards to test the program.
 
 
 ### Change the maximum depth
