@@ -175,19 +175,19 @@ string Node::makePath(){
         char c = node->getMove();
         switch(c){
             case 's':
-                path += "oicinI";
+                path += "tratS";
                 break;
             case 'u':
-                path += "amic >- ";
+                path += "pu >- ";
                 break;
             case 'd':
-                path += "oxiab >- ";
+                path += "nwod >- ";
                 break;
             case 'l':
-                path += "adreuqse >- ";
+                path += "tfel >- ";
                 break;
             case 'r':
-                path += "atierid >- ";
+                path += "thgir >- ";
                 break;
         }
         node = node->getParent();
