@@ -1,4 +1,4 @@
-# 15-Puzzle-Solver
+# 15-Puzzle Solver
 First project for the subject Artificial Inteligence, which consisted in developing a bot to solve the 15-puzzle using heuristic search.
 Our implementation was in C++.
 
