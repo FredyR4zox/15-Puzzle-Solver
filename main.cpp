@@ -8,14 +8,14 @@ using namespace std;
 
 int main(int argc, char const *argv[]){
     if(argc < 2 || (!strcmp(argv[1], "IDFS") && argc!=3) || (!strcmp(argv[1], "LDFS") && argc!=3) || (!strcmp(argv[1],"ASTAR") && argc !=3) || (!strcmp(argv[1],"GREEDY") && argc != 3) ){
-        cout << "Usage: " << argv[0] << " <Search method> <Search options>" << endl;
+        cout << "Usage: " << argv[0] << " <Search method> <Search options>" << endl << endl;
         cout << "Search methods:" << endl;
         cout << "   DFS -> use Depth First Search;" << endl;
         cout << "   LDFS <Maximum Depth> -> use Limited Depth First Search, where maximum depth is the depth limit;" << endl;
         cout << "   IDFS <Maximum Depth> -> use Iteractive Depth First Search, where maximum depth is the depth limit;" << endl;
         cout << "   BFS -> use Breadth First Search;" << endl;
         cout << "   ASTAR <Heuristic> -> use A* Search;" << endl;
-        cout << "   GREEDY <Heuristic> -> use Greedy Search;" << endl;
+        cout << "   GREEDY <Heuristic> -> use Greedy Search;" << endl << endl;
         cout << "Types of Heuristic (for ASTAR and GREEDY):" << endl;
         cout << "   0: Nº of pieces out of their final position;" << endl;
         cout << "   1: Manhattan Distance (Sum of the distance of all pieces from their final position);" << endl;
@@ -35,7 +35,7 @@ int main(int argc, char const *argv[]){
 
 
     Config initialConfig = Config(startVec);
-    cout << endl << "Initial Board: " << endl;
+    cout << endl << endl << "Initial Board: " << endl;
     initialConfig.display();
 
     Config finalConfig = Config(finalVec);
